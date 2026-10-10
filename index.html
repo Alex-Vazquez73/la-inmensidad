@@ -1,0 +1,1529 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="Un atlas del vértigo cósmico: compara el tamaño de los astros, de la Luna al universo observable, o viaja por las distancias que los separan.">
+<meta name="theme-color" content="#04050C">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="es_MX">
+<meta property="og:title" content="La Inmensidad — atlas del vértigo cósmico">
+<meta property="og:description" content="Compara el tamaño de los astros o viaja por las distancias que los separan. Desliza, observa — y deja que el universo te desborde.">
+<meta property="og:url" content="https://alex-vazquez73.github.io/la-inmensidad/">
+<meta property="og:image" content="https://alex-vazquez73.github.io/la-inmensidad/docs/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='15' fill='%2304050C'/%3E%3Ccircle cx='16' cy='16' r='11' fill='none' stroke='%23E7C46B' stroke-width='1.5' stroke-dasharray='3 3'/%3E%3Ccircle cx='16' cy='16' r='3.2' fill='%23E7C46B'/%3E%3C/svg%3E">
+<title>La Inmensidad — atlas del vértigo cósmico</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  :root{
+    --bg:#04050C;
+    --ink:#EDE7D9;
+    --dim:rgba(237,231,217,.55);
+    --gold:#E7C46B;
+    --gold-dim:rgba(231,196,107,.55);
+    --blue:#93B8E0;
+    --line:rgba(237,231,217,.14);
+    --card:rgba(9,12,24,.86);
+    --serif:"Palatino Linotype","Book Antiqua",Palatino,Georgia,serif;
+    --mono:ui-monospace,"SF Mono",Consolas,"Cascadia Mono",Menlo,monospace;
+    --sans:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+    --sb:env(safe-area-inset-bottom,0px);
+  }
+  [hidden]{display:none!important}
+  html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--ink);font-family:var(--sans)}
+  #cv{position:fixed;inset:0;display:block;cursor:grab;touch-action:none}
+  #cv.drag{cursor:grabbing}
+
+  .top{position:fixed;top:0;left:0;right:0;display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding:calc(16px + env(safe-area-inset-top,0px)) max(20px,env(safe-area-inset-right)) 16px max(20px,env(safe-area-inset-left));pointer-events:none;z-index:8}
+  .brand h1{font-family:var(--serif);font-weight:600;font-size:clamp(19px,2.4vw,27px);letter-spacing:.16em;text-transform:uppercase;text-shadow:0 2px 20px rgba(4,5,12,.9)}
+  .brand p{font-family:var(--serif);font-style:italic;color:var(--dim);font-size:13px;margin-top:2px}
+  .tabs{display:flex;gap:8px;pointer-events:auto;flex-shrink:0}
+  .tab{background:rgba(9,12,24,.5);border:1px solid var(--line);color:var(--dim);padding:8px 16px;border-radius:999px;font-family:var(--sans);font-size:12px;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:color .25s,border-color .25s,background .25s}
+  .tab:hover{color:var(--ink)}
+  .tab.active{color:var(--gold);border-color:var(--gold-dim);background:rgba(231,196,107,.08)}
+
+  .hud{position:fixed;top:74px;right:20px;text-align:right;font-family:var(--mono);font-size:11.5px;color:var(--dim);z-index:6;pointer-events:none;line-height:1.75;text-shadow:0 1px 12px rgba(4,5,12,.95)}
+  .hud .he{letter-spacing:.22em;font-size:9.5px;color:var(--gold-dim);text-transform:uppercase}
+  .hud b{display:block;color:var(--ink);font-size:15px;font-weight:500}
+
+  .narr{position:fixed;left:max(20px,env(safe-area-inset-left));bottom:calc(104px + var(--sb));max-width:min(480px,calc(100vw - 40px));z-index:6;pointer-events:none;transition:opacity .4s ease;will-change:transform,opacity}
+  .narr .ne{font-family:var(--mono);font-size:10px;letter-spacing:.26em;text-transform:uppercase;color:var(--gold);margin-bottom:7px}
+  .narr .nt{font-family:var(--serif);font-size:clamp(15px,1.8vw,18.5px);line-height:1.55;color:var(--ink);text-shadow:0 2px 18px rgba(4,5,12,.95),0 0 40px rgba(4,5,12,.8)}
+
+  .card{position:fixed;right:max(20px,env(safe-area-inset-right));bottom:calc(104px + var(--sb));width:min(380px,calc(100vw - 40px));max-height:calc(100vh - 190px - var(--sb));overflow:auto;overscroll-behavior:contain;background:var(--card);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid var(--line);border-radius:10px;padding:18px 20px 16px;z-index:9;box-shadow:0 12px 40px rgba(0,0,0,.5)}
+  .card .ce{font-family:var(--mono);font-size:9.5px;letter-spacing:.24em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:6px;padding-right:24px}
+  .card h2{font-family:var(--serif);font-weight:600;font-size:21px;margin-bottom:8px}
+  .card .cm{font-family:var(--mono);font-size:11.5px;color:var(--blue);line-height:1.6;margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid var(--line)}
+  .card .cd{font-family:var(--serif);font-size:14.5px;line-height:1.55;color:var(--ink)}
+  .card .cx{position:absolute;top:10px;right:12px;background:none;border:none;color:var(--dim);font-size:20px;cursor:pointer;line-height:1;padding:4px}
+  .card .cx:hover{color:var(--ink)}
+  .card .cx{position:sticky;float:right;top:0;margin:-8px -10px 0 0;z-index:2}
+  .card figure{margin:-18px -20px 12px;background:#000;border-radius:10px 10px 0 0;overflow:hidden}
+  .card figure img{display:block;width:100%;height:210px;object-fit:contain;background:#000}
+  .card figcaption{font-family:var(--mono);font-size:9.5px;line-height:1.55;color:var(--dim);padding:7px 20px 9px;background:rgba(9,12,24,.9)}
+  .card figcaption span{color:var(--gold-dim)}
+  .card figcaption a,.src a{color:var(--blue);text-decoration:none;border-bottom:1px solid rgba(147,184,224,.35)}
+  .card .badge{display:inline-block;font-family:var(--mono);font-size:9.5px;letter-spacing:.06em;color:var(--gold);border:1px solid var(--gold-dim);border-radius:999px;padding:2px 9px;margin:0 0 10px}
+  .cdl{display:grid;grid-template-columns:minmax(0,38%) 1fr;gap:5px 12px;margin:0 0 12px;align-items:baseline}
+  .cdl dt{font-family:var(--mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-dim)}
+  .cdl dd{font-family:var(--serif);font-size:13.5px;line-height:1.4;color:var(--ink);margin:0}
+  .cdl dd b{color:var(--gold);font-weight:600}
+  .card .cq{font-family:var(--serif);font-style:italic;font-size:14px;line-height:1.55;color:#E9D9AE;border-left:2px solid var(--gold-dim);padding-left:11px;margin-top:12px}
+  .card .clink{margin-top:12px;background:none;border:0;border-bottom:1px solid var(--gold-dim);color:var(--gold);font-family:var(--mono);font-size:11px;padding:0;cursor:pointer}
+  .cred{position:fixed;left:0;right:0;bottom:calc(3px + var(--sb));text-align:center;font-family:var(--mono);font-size:8.5px;color:rgba(237,231,217,.42);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:0 20px;z-index:8;pointer-events:none}
+  .hud .warn{display:block;max-width:230px;margin-left:auto;text-transform:none;letter-spacing:.04em;color:#E89A7A;line-height:1.4}
+
+  .controls{position:fixed;left:0;right:0;bottom:0;display:flex;gap:16px;align-items:flex-start;padding:16px max(20px,env(safe-area-inset-right)) calc(20px + var(--sb)) max(20px,env(safe-area-inset-left));background:linear-gradient(to top,rgba(4,5,12,.92) 55%,transparent);z-index:7}
+  .ctlg{display:flex;gap:8px;align-items:center;flex-shrink:0}
+  .btn{background:rgba(9,12,24,.6);border:1px solid var(--line);color:var(--ink);border-radius:999px;min-width:38px;height:34px;padding:0 12px;font-family:var(--sans);font-size:13px;cursor:pointer;transition:border-color .2s,color .2s}
+  .btn:hover{border-color:var(--gold-dim);color:var(--gold)}
+  select.btn{appearance:none;-webkit-appearance:none;padding:0 14px;font-size:12px;color:var(--dim)}
+  .sldw{flex:1;position:relative;padding-bottom:18px;min-width:0}
+  input[type=range]{width:100%;-webkit-appearance:none;appearance:none;background:transparent;height:24px;cursor:pointer}
+  input[type=range]::-webkit-slider-runnable-track{height:2px;background:var(--line);border-radius:2px}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:15px;height:15px;border-radius:50%;background:var(--gold);margin-top:-6.5px;box-shadow:0 0 12px rgba(231,196,107,.7);border:none}
+  input[type=range]::-moz-range-track{height:2px;background:var(--line);border-radius:2px}
+  input[type=range]::-moz-range-thumb{width:15px;height:15px;border-radius:50%;background:var(--gold);box-shadow:0 0 12px rgba(231,196,107,.7);border:none}
+  .ticks{position:absolute;left:0;right:0;top:24px;height:16px;font-family:var(--mono);font-size:9px;color:var(--dim);pointer-events:none}
+  .tick{position:absolute;transform:translateX(-50%);white-space:nowrap;text-align:center;letter-spacing:.04em}
+  .tick i{display:block;width:1px;height:5px;background:var(--line);margin:0 auto 2px;font-style:normal}
+
+  .help{position:fixed;right:max(20px,env(safe-area-inset-right));bottom:calc(70px + var(--sb));z-index:8;font-family:var(--mono);font-size:10.5px;color:var(--dim);background:var(--card);border:1px solid var(--line);border-radius:8px;padding:10px 14px;max-width:300px;line-height:1.8}
+  .help button{background:none;border:0;border-bottom:1px solid var(--gold-dim);color:var(--gold);font:inherit;padding:0;cursor:pointer;margin-top:4px}
+  .help a{color:var(--gold);text-decoration:none;border-bottom:1px solid var(--gold-dim)}
+  .card.src{width:min(560px,calc(100vw - 40px));max-height:min(78vh,560px);overflow:auto;left:50%;right:auto;transform:translateX(-50%);bottom:auto;top:84px}
+  .src ul{list-style:none;margin:0;padding:0}
+  .src li{font-family:var(--serif);font-size:13.5px;line-height:1.5;color:var(--ink);padding:7px 0;border-top:1px solid var(--line)}
+  .src li b{font-family:var(--mono);font-weight:400;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-dim);display:block;margin-bottom:2px}
+  .src .sn{font-family:var(--mono);font-size:10px;color:var(--dim);margin-top:10px}
+
+  .intro{position:fixed;inset:0;background:rgba(3,4,10,.72);backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px);display:flex;align-items:center;justify-content:center;z-index:20;padding:20px}
+  .icard{max-width:580px;text-align:center}
+  .icard .ie{font-family:var(--mono);font-size:10.5px;letter-spacing:.32em;text-transform:uppercase;color:var(--gold);margin-bottom:14px}
+  .icard h2{font-family:var(--serif);font-weight:600;font-size:clamp(34px,7vw,56px);letter-spacing:.1em;text-transform:uppercase;margin-bottom:16px}
+  .icard .is{font-family:var(--serif);font-size:clamp(15px,2.2vw,18px);line-height:1.6;color:var(--ink);margin-bottom:26px}
+  .icard .is em{color:var(--gold);font-style:italic}
+  .ibtns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:22px}
+  .bigbtn{background:transparent;border:1px solid var(--line);color:var(--ink);padding:13px 26px;border-radius:999px;font-family:var(--sans);font-size:14px;letter-spacing:.06em;cursor:pointer;transition:all .25s}
+  .bigbtn:hover{border-color:var(--gold-dim);color:var(--gold);transform:translateY(-1px)}
+  .bigbtn.gold{border-color:var(--gold-dim);color:var(--gold);background:rgba(231,196,107,.07)}
+  .inote{font-family:var(--mono);font-size:9.5px;color:var(--dim);line-height:1.8;max-width:460px;margin:0 auto}
+
+  @media (max-width:640px){
+    .top{gap:8px;padding-top:calc(12px + env(safe-area-inset-top,0px));padding-bottom:12px}
+    .brand h1{font-size:14px;letter-spacing:.12em}
+    .brand p{display:none}
+    .tabs{gap:6px}
+    .tab{padding:7px 11px;font-size:10.5px;letter-spacing:.06em}
+    .hud{top:60px;font-size:10.5px}
+    .hud b{font-size:13px}
+    .narr,.card{bottom:calc(92px + var(--sb))}
+    .card{left:10px;right:10px;width:auto;max-height:58vh}
+    .card figure img{height:170px}
+    .cdl{grid-template-columns:1fr;gap:1px}
+    .cdl dd{margin-bottom:6px}
+    .help{bottom:calc(76px + var(--sb))}
+    .controls{flex-wrap:wrap;row-gap:6px}
+    #tripCtl{flex:0 0 100%}
+    body.trip .narr,body.trip .card{bottom:calc(134px + var(--sb))}
+    body.trip .help{bottom:calc(122px + var(--sb))}
+    .tick span{display:none}
+    .tick.big span{display:inline}
+  }
+  @media (max-width:360px){
+    .brand h1{font-size:12px;letter-spacing:.1em}
+    .tab{padding:6px 9px;font-size:10px}
+  }
+  @media (prefers-reduced-motion: reduce){
+    .narr,.tab,.bigbtn{transition:none}
+  }
+</style>
+</head>
+<body>
+<noscript><p style="padding:24px;font-family:Georgia,serif;color:#EDE7D9">Esta pieza interactiva necesita JavaScript para funcionar.</p></noscript>
+<canvas id="cv" role="img" aria-label="Visualización interactiva de escalas cósmicas"></canvas>
+
+<header class="top">
+  <div class="brand">
+    <h1>La Inmensidad</h1>
+    <p>un atlas del vértigo cósmico</p>
+  </div>
+  <nav class="tabs">
+    <button id="tabS" class="tab active" aria-pressed="true">Tamaños</button>
+    <button id="tabT" class="tab" aria-pressed="false">El Viaje</button>
+  </nav>
+</header>
+
+<aside class="hud" id="hud"></aside>
+
+<section class="narr" id="narr" role="status" aria-live="polite">
+  <p class="ne" id="narrE"></p>
+  <p class="nt" id="narrT"></p>
+</section>
+
+<aside class="card" id="card" role="dialog" aria-label="Ficha del astro" hidden>
+  <button class="cx" id="cardX" aria-label="Cerrar">×</button>
+  <figure id="cFig" hidden><img id="cImg" alt="" loading="lazy"><figcaption id="cCap"></figcaption></figure>
+  <p class="ce" id="cTipo"></p>
+  <h2 id="cNombre"></h2>
+  <p class="cm" id="cMedida"></p>
+  <span class="badge" id="cBadge" hidden></span>
+  <dl class="cdl" id="cDatos"></dl>
+  <p class="cd" id="cTxt"></p>
+  <p class="cq" id="cDato"></p>
+  <button class="clink" id="cVel" type="button" hidden>¿Crees estar quieto? → tu velocidad real</button>
+</aside>
+
+<footer class="controls">
+  <div class="ctlg" id="tripCtl" hidden>
+    <button id="btnPlay" class="btn" aria-label="Reproducir o pausar">❚❚</button>
+    <select id="selSpd" class="btn">
+      <option value="0.12">Lento</option>
+      <option value="0.24" selected>Normal</option>
+      <option value="0.45">Rápido</option>
+      <option value="c">Luz, tiempo real</option>
+    </select>
+  </div>
+  <div class="sldw">
+    <input type="range" id="sld" min="0" max="10000" value="0" aria-label="Escala">
+    <div class="ticks" id="ticks"></div>
+  </div>
+  <div class="ctlg">
+    <button id="btnHelp" class="btn" aria-label="Ayuda">?</button>
+  </div>
+</footer>
+<p class="cred" id="cred" aria-live="off"></p>
+
+<div class="help" id="help" hidden>
+  rueda · arrastra · pellizca — para recorrer la escala<br>
+  toca un astro o un hito — para conocerlo<br>
+  espacio — pausa el viaje · ← → — avanza fino<br>
+  en el viaje, «Luz, tiempo real» avanza a 300,000 km/s de verdad<br>
+  <button id="btnVel" type="button">tu velocidad real</button> · <button id="btnSrc" type="button">fuentes y créditos</button> · <a href="https://alex-vazquez73.github.io/">← Archivo</a>
+</div>
+
+<aside class="card src" id="src" role="dialog" aria-label="Fuentes y notas" hidden>
+  <button class="cx" id="srcX" aria-label="Cerrar">×</button>
+  <p class="ce">revisado en octubre de 2026</p>
+  <h2>Fuentes y notas</h2>
+  <ul>
+    <li><b>Sistema Solar</b>Radios y distancias: NASA, Planetary Fact Sheet.</li>
+    <li><b>Estrellas</b>Gaia (ESA) y estimaciones publicadas. Los radios de las hipergigantes (VY Canis Majoris, Stephenson 2-18) tienen incertidumbres grandes. Betelgeuse: ~764 radios solares, Joyce et al., 2020, <i>ApJ</i>.</li>
+    <li><b>Número de galaxias</b>Unos dos billones (escala larga): Conselice et al., 2016, <i>ApJ</i>, a partir de datos del Hubble. Es una estimación, no un censo.</li>
+    <li><b>Vía Láctea y Andrómeda</b>Sawala et al., 2025, <i>Nature Astronomy</i>: alrededor de un 50 % de probabilidad de fusión en los próximos 10,000 millones de años.</li>
+    <li><b>Galaxia más lejana</b>MoM-z14, corrimiento al rojo z = 14.44, observada 280 millones de años tras el Big Bang (Naidu et al., <i>Open Journal of Astrophysics</i>, 2026).</li>
+    <li><b>Voyager 1</b>NASA/JPL: cruzará la distancia de un día-luz de la Tierra el 18 de noviembre de 2026.</li>
+    <li><b>Distancias cosmológicas</b>Más allá de la galaxia, el viaje usa distancias comóviles (dónde está hoy cada objeto), calculadas con los parámetros de Planck 2018. Por eso MoM-z14 aparece a ~33,900 millones de años luz aunque su luz viajó 13,500 millones de años.</li>
+    <li><b>Agujeros negros</b>Event Horizon Telescope Collaboration: M87* (2019) y Sagitario A* (2022). El anillo brillante mide ~2.6 veces el horizonte de sucesos; así se escalan aquí. TON 618 es una reconstrucción.</li>
+    <li><b>Omega Centauri</b>Häberle et al., 2024, <i>Nature</i>: agujero negro de masa intermedia de al menos 8,200 soles.</li>
+    <li><b>Laniakea</b>Tully, Courtois, Hoffman y Pomarède, 2014, <i>Nature</i>.</li>
+    <li><b>Color de las estrellas</b>Las estrellas sin foto se reconstruyen con el color de cuerpo negro de su temperatura efectiva, oscurecimiento al limbo y celdas de convección proporcionales a su tamaño.</li>
+    <li><b>Tu velocidad real</b>Dipolo del fondo de microondas (Planck): el Sol se mueve a ~370 km/s; el Grupo Local, a ~620 km/s.</li>
+    <li><b>Distancia humana récord</b>Artemis II, ~406,800 km de la Tierra, abril de 2026. La Luna sigue siendo el único mundo donde hemos puesto el pie.</li>
+  </ul>
+  <h2 style="margin-top:16px">Imágenes</h2>
+  <ul id="srcImg"></ul>
+  <p class="sn">Todas las imágenes, vía Wikimedia Commons; recortadas y comprimidas para esta pieza. 📷 fotografía · ✏️ ilustración · 🗺 mapa de datos.</p>
+  <p class="sn">Valores extremos (IC 1101, Gran Muralla Hércules–Corona Boreal, hipergigantes) están marcados como estimaciones discutidas.</p>
+</aside>
+
+<div class="intro" id="intro">
+  <div class="icard">
+    <p class="ie">Archivo · Alejandro Vázquez</p>
+    <h2>La Inmensidad</h2>
+    <p class="is">Dos maneras de perderse: comparar los <em>tamaños</em> de los astros, o viajar por las <em>distancias</em> que los separan.<br>Desliza, observa — y deja que el universo te desborde.</p>
+    <div class="ibtns">
+      <button class="bigbtn" id="goS">Explorar tamaños</button>
+      <button class="bigbtn gold" id="goT">Emprender el viaje</button>
+    </div>
+    <p class="inote" id="nojs" style="color:#E89A7A;margin-bottom:12px">Si los botones no responden, el visor donde abriste esta página no ejecuta JavaScript (pasa con la vista previa de Google Drive o de Archivos en iPhone). Ábrela en Safari o Chrome.</p>
+    <p class="inote">rueda · arrastre · pellizco para hacer zoom — toca cualquier astro para conocerlo<br>imágenes reales de NASA · ESA · ESO · EHT — lo que nadie ha fotografiado está reconstruido y marcado<br>valores extremos marcados como estimaciones publicadas · revisado en octubre de 2026</p>
+  </div>
+</div>
+
+<script>
+'use strict';
+document.getElementById('nojs').remove();
+/* ============================== utilidades ============================== */
+const $=id=>document.getElementById(id);
+const clamp=(v,a,b)=>Math.min(b,Math.max(a,v));
+const lerp=(a,b,t)=>a+(b-a)*t;
+const C=299792458, UA=1.495978707e11, LY=9.4607e15, RT=6.371e6;
+const TAU=Math.PI*2;
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const nf=(x,d=0)=>x.toLocaleString('es-MX',{maximumFractionDigits:d,minimumFractionDigits:0});
+const SUP='⁰¹²³⁴⁵⁶⁷⁸⁹';
+const sup=n=>String(n).split('').map(c=>c==='-'?'⁻':SUP[+c]).join('');
+function fmtLen(m){
+  if(m<1e4) return nf(m)+' m';
+  if(m<0.05*UA){const km=m/1e3;return nf(km,km<100?1:0)+' km';}
+  if(m<0.07*LY){const ua=m/UA;return nf(ua,ua<20?2:0)+' UA';}
+  const ly=m/LY;
+  if(ly<1e6) return nf(ly,ly<20?2:0)+' años luz';
+  return nf(ly/1e6,ly<2e7?1:0)+' millones de años luz';
+}
+function fmtTime(s){
+  if(s<1) return nf(s*1000)+' ms';
+  if(s<90) return nf(s,s<10?1:0)+' segundos';
+  if(s<5400) return nf(s/60,s<1200?1:0)+' minutos';
+  if(s<129600) return nf(s/3600,1)+' horas';
+  const d=s/86400;
+  if(d<548) return nf(d,d<20?1:0)+' días';
+  const y=s/31557600;
+  if(y<1e6) return nf(y,y<20?1:0)+' años';
+  return nf(y/1e6,y<2e7?1:0)+' millones de años';
+}
+function fmtVel(v){
+  const r=v/C;
+  if(r<0.005) return nf(v/1000)+' km/s';
+  if(r<1) return nf(r*100,1)+' % de c';
+  if(r<1000) return nf(r,r<20?1:0)+' × c';
+  const e=Math.floor(Math.log10(r)), man=r/Math.pow(10,e);
+  return man.toFixed(1)+'×10'+sup(e)+' × c';
+}
+function hexRGB(h){const n=parseInt(h.slice(1),16);return[n>>16&255,n>>8&255,n&255];}
+function shade(h,f){const[r,g,b]=hexRGB(h);return`rgb(${Math.round(r*f)},${Math.round(g*f)},${Math.round(b*f)})`;}
+function rgba(h,a){const[r,g,b]=hexRGB(h);return`rgba(${r},${g},${b},${a})`;}
+
+/* ============================== imágenes ============================== */
+/* Todas vienen de Wikimedia Commons (copias de NASA, ESA, ESO, EHT y otros), recortadas y
+   comprimidas en img/. t: foto | ilus (ilustración) | mapa. Se cargan solo al necesitarse. */
+const COM='https://commons.wikimedia.org/wiki/File:';
+const IMG={
+ moon:{cr:'NASA/GSFC/Arizona State University (LRO)',lic:'Dominio público',u:'Moon_nearside_LRO_5000.jpg',t:'foto',cap:'Mosaico de la sonda Lunar Reconnaissance Orbiter.'},
+ mercury:{cr:'NASA/JHUAPL/Carnegie Institution (MESSENGER)',lic:'Dominio público',u:'Mercury_in_color_-_Prockter07-edit1.jpg',t:'foto',cap:'Sonda MESSENGER, 2008.'},
+ venus:{cr:'NASA/JPL-Caltech (Mariner 10)',lic:'Dominio público',u:'PIA23791-Venus-NewlyProcessedView-20200608_(cropped).jpg',t:'foto',cap:'Mariner 10, 1974; reprocesada en 2020.'},
+ earth:{cr:'NASA / tripulación del Apolo 17',lic:'Dominio público',u:'The_Earth_seen_from_Apollo_17.jpg',t:'foto',cap:'«La Canica Azul», 7 de diciembre de 1972.'},
+ mars:{cr:'NASA/USGS (Viking)',lic:'Dominio público',u:'Mars_Valles_Marineris.jpeg',t:'foto',cap:'Mosaico de los orbitadores Viking.'},
+ jupiter:{cr:'NASA, ESA y A. Simon (GSFC)',lic:'Dominio público',u:'Jupiter_and_its_shrunken_Great_Red_Spot.jpg',t:'foto',cap:'Telescopio Hubble, 2014.'},
+ saturn:{cr:'NASA/JPL/Space Science Institute (Cassini)',lic:'Dominio público',u:'Saturn_from_Cassini_Orbiter_(2004-10-06).jpg',t:'foto',cap:'Mosaico de la sonda Cassini, octubre de 2004.'},
+ uranus:{cr:'NASA/JPL (Voyager 2)',lic:'Dominio público',u:'Uranus_as_seen_by_NASA%27s_Voyager_2_(remastered)_-_JPEG_converted.jpg',t:'foto',cap:'Voyager 2, 1986.'},
+ neptune:{cr:'NASA/JPL/Voyager-ISS, proc. A. Cowart',lic:'Dominio público',u:'Neptune_-_Voyager_2_(29347980845)_flatten_crop.jpg',t:'foto',cap:'Voyager 2, 1989.'},
+ pluto:{cr:'NASA/JHUAPL/SwRI/A. Parker (New Horizons)',lic:'Dominio público',u:'Pluto_in_True_Color_-_High-Res.jpg',t:'foto',cap:'New Horizons, julio de 2015.'},
+ sun:{cr:'Giuseppe Donatiello',lic:'CC0',u:'Solar_disk_on_July_4,_2014_(50172815897).jpg',t:'foto',cap:'4 de julio de 2014, con filtro solar: el naranja lo pone el filtro. Fuera de la atmósfera, el Sol es blanco.'},
+ m87:{cr:'Event Horizon Telescope',lic:'CC BY 4.0',u:'Black_hole_-_Messier_87_crop_max_res.jpg',t:'foto',cap:'Event Horizon Telescope, 2019: la primera imagen de un agujero negro.',ring:0.3125},
+ sgra:{cr:'EHT Collaboration',lic:'CC BY 4.0',u:'Sag_A*.jpg',t:'foto',cap:'Event Horizon Telescope, 2022.',ring:0.359},
+ orion:{cr:'NASA, ESA, M. Robberto (STScI/ESA) y Hubble Orion Treasury Project',lic:'Dominio público',u:'Orion_Nebula_-_Hubble_2006_mosaic_18000.jpg',t:'foto',cap:'Mosaico del Hubble, 2006.'},
+ omegacen:{cr:'ESO',lic:'CC BY 4.0',u:'Omega_Centauri_by_ESO.jpg',t:'foto',cap:'Telescopio MPG/ESO de 2.2 m, La Silla.'},
+ milkyway:{cr:'NASA/JPL-Caltech/ESO/R. Hurt',lic:'Dominio público',u:'Artist%E2%80%99s_impression_of_the_Milky_Way.jpg',t:'ilus',cap:'Ilustración basada en datos de Spitzer: nadie ha fotografiado nuestra galaxia desde fuera.'},
+ andromeda:{cr:'Adam Evans',lic:'CC BY 2.0',u:'Andromeda_Galaxy_(with_h-alpha).jpg',t:'foto',cap:'Astrofotografía con filtro H-alfa.'},
+ ic1101:{cr:'NASA/ESA, Hubble Legacy Archive',lic:'Dominio público',u:'Color_cutout_hst_06228_03_wfpc2_f702w_f450w_pc_sci_IC_1101.jpg',t:'foto',cap:'Telescopio Hubble (WFPC2).'},
+ cmb:{cr:'NASA / WMAP Science Team',lic:'Dominio público',u:'WMAP_2012.png',t:'mapa',cap:'Mapa de todo el cielo del fondo de microondas (WMAP, 9 años). Los colores son variaciones de una cienmilésima de grado.'},
+ betelgeuse:{cr:'ESO/M. Montargès et al.',lic:'CC BY 4.0',u:'SPHERE%E2%80%99s_view_of_Betelgeuse_in_January_2019_(eso2003b).jpg',t:'foto',cap:'VLT/SPHERE, enero de 2019, antes de la Gran Atenuación: uno de los pocos discos estelares resueltos.'},
+ antares:{cr:'ESO/K. Ohnaka',lic:'CC BY 4.0',u:'VLTI_velocity_map_of_the_surface_of_Antares_(eso1726c).jpg',t:'mapa',cap:'VLTI, 2017: mapa de velocidades de su superficie. Rojo se aleja, azul se acerca.'},
+ siriusb:{cr:'NASA, ESA, H. Bond (STScI) y M. Barstow (U. Leicester)',lic:'Dominio público',u:'Sirius_A_and_B_Hubble_photo.jpg',t:'foto',cap:'Hubble: Sirio A al centro; Sirio B es el puntito abajo a la izquierda.'},
+ vycma:{cr:'NASA, ESA y R. Humphreys (U. Minnesota)',lic:'Dominio público',u:'VY_Canis_Majoris.jpg',t:'foto',cap:'Hubble: la nebulosa que la estrella ha ido expulsando. La estrella misma es el punto central.'},
+ paleblue:{cr:'NASA/JPL (Voyager 1)',lic:'Dominio público',u:'Pale_Blue_Dot.png',t:'foto',cap:'«Un punto azul pálido», 14 de febrero de 1990. La Tierra es el puntito en la franja de luz de la derecha.'},
+ voyager:{cr:'NASA/JPL',lic:'Dominio público',u:'Voyager_spacecraft.jpg',t:'ilus',cap:'Ilustración de la nave Voyager.'},
+ iss:{cr:'NASA/Thomas Pesquet',lic:'Dominio público',u:'ISS_from_the_SpaceX_Crew_Dragon_Endeavor_during_Flyaround_(iss066e080453).jpg',t:'foto',cap:'Desde la Crew Dragon, noviembre de 2021.'},
+ atmosfera:{cr:'NASA Earth Observatory',lic:'Dominio público',u:'Top_of_Atmosphere.jpg',t:'foto',cap:'El borde de la atmósfera, visto desde la órbita.'},
+ lmc:{cr:'ESO',lic:'CC BY 4.0',u:'LMC_snapped_by_the_ESO_1-metre_Schmidt_telescope.jpg',t:'foto',cap:'Telescopio Schmidt de 1 m de ESO.'},
+ deepfield:{cr:'NASA, ESA, CSA y STScI',lic:'Dominio público',u:'Webb%27s_First_Deep_Field.jpg',t:'foto',cap:'Primer campo profundo del James Webb, 2022: casi cada punto es una galaxia, en un trozo de cielo del tamaño de un grano de arena sostenido a la distancia del brazo.'},
+ momz14:{cr:'NASA, ESA, CSA, STScI, R. Naidu (MIT); proc. J. DePasquale',lic:'CC BY 4.0',u:'COSMOS_Field_MoM-z14_Galaxy_(NIRCam_pullout_image)_(weic2603a).jpg',t:'foto',cap:'James Webb (NIRCam): MoM-z14, la mancha del centro.'}
+};
+const IMGC={};
+function getImg(k){
+  if(!k||!IMG[k])return null;
+  let c=IMGC[k];
+  if(!c){c=IMGC[k]={im:new Image(),ok:false};c.im.decoding='async';
+    c.im.onload=()=>{c.ok=true;};c.im.src='img/'+k+'.webp';}
+  return c.ok?c.im:null;
+}
+const TIPO_IMG={foto:'📷 Fotografía',ilus:'✏️ Ilustración',mapa:'🗺 Mapa de datos'};
+
+/* ============================== datos: tamaños ============================== */
+/* r = radio en metros. teff = temperatura (K) para el color de las estrellas reconstruidas.
+   img = foto en el lienzo · card = foto solo en la ficha · rr = rango estimado del radio (m).
+   dx, dy = desplazamiento manual (fracción de la pantalla) para que los astros casi iguales no se encimen. */
+const RS=6.957e8;
+const SIZES=[
+{n:'Estrella de neutrones',tipo:'Cadáver estelar',r:1.2e4,kind:'ns',teff:1e6,vis:'rec',
+ med:'Radio: ~12 km · más masa que el Sol',
+ datos:[['Radio','~12 km (24 km de diámetro)'],['Masa','~1.4 veces el Sol'],['Densidad','una cucharadita pesaría miles de millones de toneladas'],['Giro récord','716 vueltas por segundo']],
+ txt:'Lo que queda cuando una estrella de más de ~8 masas solares agota su combustible y su núcleo colapsa en una supernova. La presión empuja los electrones dentro de los protones: la materia se vuelve casi toda neutrones. Es, en la práctica, un núcleo atómico del tamaño de una ciudad. Su gravedad en la superficie es unos cien mil millones de veces la terrestre; una «montaña» ahí mediría milímetros. Las que giran y barren el espacio con haces de radio —como faros— son los púlsares.',
+ dato:'Si la Tierra se comprimiera a esa densidad, cabría en una esfera de unos 300 metros de diámetro.'},
+{n:'Plutón',tipo:'Planeta enano',r:1.1883e6,kind:'photo',img:'pluto',tx:0,ty:-1.2,dy:0,vis:'foto',
+ med:'Radio: 1,188 km · 0.19 × Tierra',
+ datos:[['Radio','1,188 km · 0.19 × Tierra'],['Distancia al Sol','30 a 49 UA'],['Un año','248 años terrestres'],['Temperatura','~ −230 °C']],
+ txt:'Fue planeta de 1930 a 2006, cuando la Unión Astronómica Internacional decidió que no había «limpiado» su órbita. La sonda New Horizons lo visitó en 2015 y encontró un mundo geológicamente vivo: glaciares de nitrógeno que fluyen, montañas de hielo de agua duras como roca y una atmósfera tenue con neblinas azules.',
+ dato:'El «corazón» claro es una llanura de nitrógeno congelado de unos 1,000 km que se renueva por convección. Plutón no ha terminado de hacerse.'},
+{n:'La Luna',tipo:'Satélite natural',r:1.7374e6,kind:'photo',img:'moon',tx:0,ty:0.6,dy:0,vis:'foto',
+ med:'Radio: 1,737 km · 0.27 × Tierra',
+ datos:[['Radio','1,737 km · 0.27 × Tierra'],['Distancia','384,400 km (1.3 segundos-luz)'],['Masa','1/81 de la Tierra'],['Gravedad','1/6 de la terrestre']],
+ txt:'Probablemente nació de un choque: hace unos 4,500 millones de años, un cuerpo del tamaño de Marte golpeó a la Tierra joven y los escombros se reunieron en órbita. Siempre nos muestra la misma cara porque su rotación quedó acoplada a su órbita. Las manchas oscuras —los «mares»— son lava basáltica solidificada; las zonas claras, la corteza original, saturada de cráteres.',
+ dato:'Se aleja de nosotros 3.8 cm cada año. En un futuro lejano, los eclipses totales de Sol dejarán de existir: la Luna ya no alcanzará a cubrirlo.'},
+{n:'Mercurio',tipo:'Planeta rocoso',r:2.4397e6,kind:'photo',img:'mercury',tx:0,ty:-1.15,dy:0,vis:'foto',
+ med:'Radio: 2,440 km · 0.38 × Tierra',
+ datos:[['Radio','2,440 km · 0.38 × Tierra'],['Distancia al Sol','0.39 UA'],['Temperatura','de −180 °C a 430 °C'],['Día solar','176 días terrestres']],
+ txt:'El planeta más pequeño y el más cercano al Sol. Sin atmósfera que retenga el calor, de día podría fundir plomo y de noche se congela. Su núcleo de hierro ocupa cerca del 85 % de su radio: es casi una bala de metal con una cáscara de roca. Al enfriarse se ha encogido varios kilómetros, y los acantilados de su superficie lo delatan.',
+ dato:'Un día solar en Mercurio dura dos de sus años: gira tres veces sobre su eje por cada dos vueltas al Sol.'},
+{n:'Marte',tipo:'Planeta rocoso',r:3.3895e6,kind:'photo',img:'mars',tx:0,ty:1.5,dy:0,vis:'foto',
+ med:'Radio: 3,390 km · 0.53 × Tierra',
+ datos:[['Radio','3,390 km · 0.53 × Tierra'],['Distancia al Sol','1.52 UA'],['Día','24 h 37 min'],['Temperatura media','~ −63 °C']],
+ txt:'Hace más de 3,000 millones de años tuvo ríos, lagos y quizá un océano. Perdió su campo magnético, el viento solar le arrancó casi toda la atmósfera, y el agua que le queda está congelada en los polos y bajo el suelo. La cicatriz que cruza la imagen es Valles Marineris: un cañón de 4,000 km, tan largo como Estados Unidos de costa a costa. Es el único planeta habitado solo por robots.',
+ dato:'Alberga el volcán más alto del Sistema Solar: el Monte Olimpo, de 22 km — dos Everest y medio apilados uno sobre otro.'},
+{n:'Sirio B',tipo:'Enana blanca',r:5.84e6,kind:'star',teff:25000,card:'siriusb',tx:2.4,ty:-0.9,dy:0,vis:'rec',
+ med:'Radio: ~5,800 km · 0.92 × Tierra',
+ datos:[['Radio','~5,800 km · 0.92 × Tierra'],['Masa','~1 vez el Sol'],['Temperatura','~25,000 K'],['Distancia','8.6 años luz']],
+ txt:'La compañera invisible de Sirio. Friedrich Bessel la dedujo en 1844 por el bamboleo de Sirio A, antes de que nadie la viera. Es el núcleo desnudo de una estrella que ya murió: toda la masa del Sol comprimida en una esfera del tamaño de la Tierra. Ya no genera energía; solo se enfría, durante miles de millones de años. Así terminará nuestro Sol.',
+ dato:'En la foto del Hubble es el puntito abajo a la izquierda, ahogado por el resplandor de Sirio A, unas diez mil veces más brillante.'},
+{n:'Venus',tipo:'Planeta rocoso',r:6.0518e6,kind:'photo',img:'venus',tx:-0.5,ty:-1.45,dy:0,vis:'foto',
+ med:'Radio: 6,052 km · 0.95 × Tierra',
+ datos:[['Radio','6,052 km · 0.95 × Tierra'],['Temperatura','~465 °C en la superficie'],['Presión','92 veces la terrestre'],['Día','243 días terrestres (su año dura 225)']],
+ txt:'Gemela de la Tierra en tamaño, su opuesto en destino. Un efecto invernadero desbocado la cubrió de dióxido de carbono y nubes de ácido sulfúrico: su superficie está más caliente que la de Mercurio, aunque está casi al doble de distancia del Sol. Gira al revés que casi todos los planetas, y tan despacio que su día dura más que su año.',
+ dato:'Las sondas soviéticas Venera que lograron aterrizar sobrevivieron, como mucho, un par de horas.'},
+{n:'La Tierra',tipo:'Planeta vivo',r:6.371e6,kind:'earth',img:'earth',tx:0.5,ty:0.55,dy:0,vis:'foto',vel:1,
+ med:'Radio: 6,371 km · nuestra vara de medir',
+ datos:[['Radio','6,371 km'],['Masa','5.97 × 10²⁴ kg'],['Edad','~4,540 millones de años'],['Distancia al Sol','1 UA (8 min 20 s de luz)']],
+ txt:'Esta es «la Canica Azul»: la fotografió la tripulación del Apolo 17 el 7 de diciembre de 1972, a unos 29,000 km, camino a la Luna. Se ven África, Arabia y el casquete antártico. Es una de las fotografías más reproducidas de la historia — y de las pocas en que la Tierra aparece entera, iluminada de frente.',
+ dato:'El único punto del universo donde sabemos, con certeza, que la materia se pregunta por sí misma.'},
+{n:'Neptuno',tipo:'Gigante de hielo',r:2.4622e7,kind:'photo',img:'neptune',tx:0,ty:1.15,dy:0,vis:'foto',
+ med:'Radio: 24,622 km · 3.9 × Tierra',
+ datos:[['Radio','24,622 km · 3.9 × Tierra'],['Distancia al Sol','30.1 UA'],['Un año','165 años terrestres'],['Vientos','hasta 2,100 km/h']],
+ txt:'El primer planeta encontrado con matemáticas antes que con los ojos: Urbain Le Verrier calculó dónde debía estar a partir de las perturbaciones en la órbita de Urano, y Johann Galle lo vio en 1846 a menos de un grado de la predicción. Desde entonces ha completado apenas una vuelta al Sol, en 2011. Solo la Voyager 2 lo ha visitado.',
+ dato:'Vientos de 2,100 km/h: los más veloces del Sistema Solar, en el planeta más alejado del Sol. La energía escasea; la furia, no.'},
+{n:'Urano',tipo:'Gigante de hielo',r:2.5362e7,kind:'photo',img:'uranus',tx:0,ty:-1.15,dy:0,vis:'foto',
+ med:'Radio: 25,362 km · 4 × Tierra',
+ datos:[['Radio','25,362 km · 4 × Tierra'],['Inclinación del eje','98°'],['Distancia al Sol','19.2 UA'],['Temperatura mínima','−224 °C']],
+ txt:'Rueda sobre su órbita como una bola de boliche: su eje está inclinado 98°, quizá por un choque gigantesco en su juventud. Cada polo vive unos 42 años de día continuo y luego 42 de noche. Fue el primer planeta descubierto con telescopio (William Herschel, 1781). Solo una nave lo ha visitado: la Voyager 2, en 1986, que tomó esta imagen.',
+ dato:'Su atmósfera registra la temperatura más baja de todos los planetas: −224 °C, más frío que Neptuno, que está más lejos.'},
+{n:'Saturno',tipo:'Gigante gaseoso',r:5.8232e7,kind:'saturn',img:'saturn',tx:0,ty:-1.35,dy:0,vis:'foto',
+ med:'Radio: 58,232 km · 9 × Tierra',
+ datos:[['Radio','58,232 km · 9.1 × Tierra'],['Anillos','~270,000 km de diámetro, ~10 m de grosor típico'],['Densidad','0.69 g/cm³: menos que el agua'],['Lunas','274 confirmadas (2025)']],
+ txt:'Sus anillos son hielo de agua casi puro, en trozos que van de granos de polvo a casas, con un grosor típico de unos diez metros: en proporción, mucho más delgados que una hoja de papel. Quizá son jóvenes —unos cientos de millones de años— y se están desmoronando hacia el planeta. Esta imagen es un mosaico de 126 fotos de la sonda Cassini.',
+ dato:'Es tan poco denso que, en una bañera lo bastante grande, flotaría.'},
+{n:'Júpiter',tipo:'Gigante gaseoso',r:6.9911e7,kind:'photo',img:'jupiter',tx:0,ty:1.15,dy:0,vis:'foto',flat:0.957,
+ med:'Radio: 69,911 km · 11 × Tierra',
+ datos:[['Radio','69,911 km · 11 × Tierra'],['Masa','318 Tierras: 2.5 veces todos los demás planetas juntos'],['Día','9 h 56 min'],['Lunas','más de 90']],
+ txt:'Gira tan rápido —su día dura menos de diez horas— que se achata en los polos, y se nota en la foto. La Gran Mancha Roja, una tormenta observada al menos desde 1830, se ha encogido: hoy mide unos 16,000 km, apenas más que la Tierra. Su gravedad desvía cometas y asteroides; si eso protege o bombardea al Sistema Solar interior es todavía tema de debate.',
+ dato:'En su volumen caben ~1,300 Tierras.'},
+{n:'Próxima Centauri',tipo:'Enana roja',r:1.07e8,kind:'star',teff:3042,tx:1.0,ty:-0.2,dy:0,vis:'rec',
+ med:'Radio: ~107,000 km · 0.15 × Sol',
+ datos:[['Radio','~107,000 km · 0.15 × Sol'],['Temperatura','~3,000 K'],['Distancia','4.24 años luz'],['Planetas','Próxima b (zona templada) y Próxima d']],
+ txt:'Una enana roja, el tipo de estrella más común de la galaxia: tres de cada cuatro son así. Es una estrella fulgurante: lanza llamaradas que multiplican su brillo en minutos, malas noticias para la vida en Próxima b, el planeta rocoso que orbita en su zona templada. Ningún telescopio resuelve su disco: lo que ves es una reconstrucción con el color de su temperatura real.',
+ dato:'La estrella más cercana al Sol es tan tenue que no puedes verla a simple vista. Vivirá billones de años: verá apagarse a casi todas las demás.'},
+{n:'El Sol',tipo:'Estrella G2 — la nuestra',r:6.9634e8,kind:'photo',img:'sun',vis:'foto',glow:'#FFE9B0',
+ med:'Radio: 696,340 km · 109 × Tierra',
+ datos:[['Radio','696,340 km · 109 × Tierra'],['Temperatura','5,772 K en la superficie · ~15 millones K en el núcleo'],['Edad','~4,600 millones de años'],['Masa','99.86 % del Sistema Solar']],
+ txt:'Una «enana amarilla» que en realidad es blanca, a mitad de su vida. La energía nace en el núcleo, al fusionarse hidrógeno en helio, y tarda decenas de miles de años en abrirse paso hasta la superficie; de ahí, solo 8 minutos hasta tus ojos. Las manchas de la foto son regiones más frías, del tamaño de la Tierra o mayores, donde el campo magnético frena la convección.',
+ dato:'Cada segundo convierte unos 4 millones de toneladas de materia en luz pura. E = mc², funcionando frente a ti.'},
+{n:'Sirio A',tipo:'Estrella blanca',r:1.19e9,kind:'star',teff:9940,card:'siriusb',vis:'rec',
+ med:'Radio: ~1.19 millones de km · 1.7 × Sol',
+ datos:[['Radio','~1.19 millones de km · 1.7 × Sol'],['Temperatura','~9,900 K'],['Luminosidad','25 × Sol'],['Distancia','8.6 años luz']],
+ txt:'La estrella más brillante del cielo nocturno no es especialmente poderosa: brilla tanto porque está cerca. Tiene el doble de masa que el Sol y una compañera, Sirio B, una enana blanca del tamaño de la Tierra. Se acerca lentamente al Sistema Solar, así que seguirá dominando el cielo durante decenas de miles de años.',
+ dato:'Los egipcios ajustaban su calendario con su salida helíaca: la crecida del Nilo obedecía a Sirio.'},
+{n:'Sagitario A*',tipo:'Agujero negro supermasivo — el nuestro',r:1.27e10,kind:'bhimg',img:'sgra',tx:0,ty:2.7,dy:0,vis:'foto',
+ med:'Horizonte: ~12.7 millones de km · 4.3 millones de soles',
+ datos:[['Masa','~4.3 millones de soles'],['Horizonte de sucesos','~12.7 millones de km de radio (0.08 UA)'],['Distancia','~26,700 años luz'],['Primera imagen','2022, Event Horizon Telescope']],
+ txt:'El agujero negro en el centro de la Vía Láctea. Su masa se midió siguiendo durante décadas las órbitas de las estrellas que lo rodean, trabajo que dio el Nobel de Física 2020 a Reinhard Genzel y Andrea Ghez. La imagen muestra gas caliente girando alrededor de su sombra: el anillo brillante es unas 2.6 veces mayor que el horizonte, porque la gravedad curva la luz a su alrededor. Así se dibuja aquí.',
+ dato:'Para fotografiarlo hubo que convertir a la Tierra entera en un telescopio: radiotelescopios sincronizados de Hawái a la Antártida.'},
+{n:'Arcturus',tipo:'Gigante naranja',r:1.77e10,kind:'star',teff:4286,tx:0,ty:-1.0,dy:0,vis:'rec',
+ med:'Radio: ~17.7 millones de km · 25 × Sol',
+ datos:[['Radio','~17.7 millones de km · 25 × Sol'],['Temperatura','~4,300 K'],['Distancia','37 años luz'],['Edad','~7,000 millones de años']],
+ txt:'Una gigante naranja: ya agotó el hidrógeno de su núcleo y se hinchó. Es vieja y no pertenece del todo al disco de nuestra galaxia: se mueve a contracorriente, quizá como resto de una galaxia pequeña que la Vía Láctea devoró. En 1933 su luz, captada por un telescopio, encendió las luces de la Feria Mundial de Chicago.',
+ dato:'Es el retrato del Sol dentro de ~5,000 millones de años, cuando agote su hidrógeno y se hinche.'},
+{n:'Aldebarán',tipo:'Gigante naranja',r:3.06e10,kind:'star',teff:3910,vis:'rec',dy:0.15,
+ med:'Radio: ~30.6 millones de km · 44 × Sol',
+ datos:[['Radio','~30.6 millones de km · 44 × Sol'],['Temperatura','~3,900 K'],['Distancia','65 años luz'],['Luminosidad','~440 × Sol']],
+ txt:'Parece formar parte de las Híades, la «V» de la cara del toro, pero es una impostora de perspectiva: está a 65 años luz, menos de la mitad de distancia que el cúmulo. Es una gigante que ya pasó su vida tranquila; podría tener un planeta gigante, aunque la detección sigue en duda.',
+ dato:'El «ojo del toro» en Tauro. La sonda Pioneer 10 viaja hacia su vecindario: llegará en unos dos millones de años. Nadie recibirá el aviso.'},
+{n:'Rigel',tipo:'Supergigante azul',r:5.49e10,kind:'star',teff:12100,vis:'rec',dy:-0.04,
+ med:'Radio: ~54.9 millones de km · 79 × Sol',
+ datos:[['Radio','~54.9 millones de km · 79 × Sol'],['Temperatura','~12,000 K'],['Luminosidad','~120,000 × Sol'],['Distancia','~860 años luz']],
+ txt:'El pie de Orión. Una supergigante azul de unas 21 masas solares que en realidad forma un sistema de al menos cuatro estrellas. Las estrellas así de masivas queman su combustible con furia: Rigel tiene apenas unos 8 millones de años y ya está cerca del final. El Sol, a esa edad, apenas acababa de encenderse.',
+ dato:'Las azules viven rápido y mueren jóvenes: su destino es la supernova.'},
+{n:'Antares',tipo:'Supergigante roja',r:4.73e11,kind:'star',teff:3660,card:'antares',tx:0,ty:1.2,dy:0,vis:'rec',
+ med:'Radio: ~473 millones de km · ~680 × Sol',
+ datos:[['Radio','~473 millones de km · ~680 × Sol'],['Temperatura','~3,600 K'],['Distancia','~550 años luz'],['Masa','~12 a 15 soles']],
+ txt:'El corazón del Escorpión. En 2017, el interferómetro VLTI de ESO hizo con ella el primer mapa de los movimientos en la superficie de una estrella distinta del Sol (la imagen de la ficha). Su atmósfera hierve en celdas de convección gigantes, cada una mayor que la órbita de la Tierra. Lo que ves en el lienzo es una reconstrucción con su temperatura y esas celdas.',
+ dato:'«Anti-Ares», la rival de Marte por su color. Puesta en el lugar del Sol, engulliría la órbita del propio Marte.'},
+{n:'Betelgeuse',tipo:'Supergigante roja',r:5.3e11,rr:[702*RS,880*RS],kind:'star',teff:3600,card:'betelgeuse',tx:0,ty:-1.2,dy:0,vis:'rec',
+ med:'Radio: ~530 millones de km · ~760 × Sol (estimado)',
+ datos:[['Radio','~530 millones de km · ~760 × Sol (702–880)'],['Temperatura','~3,600 K'],['Distancia','~550 años luz'],['Edad','~10 millones de años']],
+ txt:'El hombro de Orión. Entre 2019 y 2020 perdió cerca de dos tercios de su brillo —la «Gran Atenuación»— y medio mundo pensó que iba a estallar. No era eso: expulsó una nube de gas que se enfrió en polvo y tapó parte de la estrella. Es una de las pocas estrellas cuyo disco se ve como algo más que un punto (ficha). En 2025 se detectó una pequeña estrella compañera, bautizada Siwarha. El anillo punteado marca el rango de su radio.',
+ dato:'Cuando estalle como supernova —mañana o en cien mil años— brillará como la Luna en cuarto creciente y se verá de día.'},
+{n:'VY Canis Majoris',tipo:'Hipergigante roja',r:9.88e11,rr:[1300*RS,1540*RS],kind:'star',teff:3490,card:'vycma',tx:0,ty:1.6,dy:0,vis:'rec',
+ med:'Radio: ~988 millones de km · ~1,420 × Sol',
+ datos:[['Radio','~988 millones de km · ~1,420 × Sol (±120)'],['Temperatura','~3,500 K'],['Distancia','~3,900 años luz'],['Estado','perdiendo masa a chorros']],
+ txt:'Durante años fue la candidata a estrella más grande conocida. La imagen del Hubble (ficha) no muestra la estrella —que es un punto— sino la nebulosa que ella misma va soltando: arcos, nudos y filamentos de gas y polvo expulsados en los últimos siglos. Podría acabar colapsando en un agujero negro, quizá sin una supernova brillante.',
+ dato:'Sus capas externas son tan tenues que su «superficie» es casi un vacío luminoso. Se está deshaciendo ante nuestros telescopios.'},
+{n:'Stephenson 2-18',tipo:'Hipergigante roja',r:1.5e12,unc:1,kind:'star',teff:3200,tx:0,ty:-1.3,dy:0,vis:'rec',
+ med:'Radio: ~1,500 millones de km · ~2,150 × Sol (muy incierto)',
+ datos:[['Radio','~1,500 millones de km · ~2,150 × Sol (muy incierto)'],['Temperatura','~3,200 K'],['Distancia','~19,000 años luz'],['Hogar','el cúmulo Stephenson 2, en el Escudo']],
+ txt:'Vive en un cúmulo de supergigantes rojas escondido tras el polvo del plano galáctico, así que solo se estudia en infrarrojo. Su radio se deduce de su brillo y su temperatura, y ambas cifras dependen de cuánto polvo hay en medio: su tamaño real podría ser bastante menor. La estrella más grande conocida… con asterisco. El halo difuso marca esa incertidumbre.',
+ dato:'En el lugar del Sol, su superficie rebasaría la órbita de Saturno. Un fotón tardaría ~8.7 horas en rodear su ecuador.'},
+{n:'M87*',tipo:'Agujero negro supermasivo',r:1.92e13,kind:'bhimg',img:'m87',vis:'foto',dy:0.12,
+ med:'Horizonte: ~128 UA · 6,500 millones de soles',
+ datos:[['Masa','~6,500 millones de soles'],['Horizonte de sucesos','~128 UA de radio'],['Distancia','~55 millones de años luz'],['Galaxia','M87, en el Cúmulo de Virgo']],
+ txt:'La primera fotografía de un agujero negro, presentada en abril de 2019. Está en el corazón de la galaxia elíptica gigante M87, que lanza un chorro de partículas a casi la velocidad de la luz, de miles de años luz de largo. El tamaño y la forma de su sombra coincidieron con lo que predice la relatividad general de Einstein, un siglo después de formulada.',
+ dato:'Su horizonte de sucesos es más grande que toda la órbita de Plutón.'},
+{n:'TON 618',tipo:'Agujero negro supermasivo (cuásar)',r:1.95e14,kind:'bh',vis:'rec',dy:-0.06,
+ med:'Horizonte de sucesos: ~1,300 UA · ~66,000 millones de masas solares',
+ datos:[['Masa','~66,000 millones de soles (estimado)'],['Horizonte de sucesos','~1,300 UA de radio'],['Su luz','viajó ~10,800 millones de años'],['Brillo','más de cien billones de soles']],
+ txt:'No lo vemos a él, sino al cuásar que lo rodea: un disco de gas que cae y brilla más que galaxias enteras. Su masa se infiere de la velocidad de ese gas, con un método indirecto de incertidumbre grande. Lo que ves aquí es una reconstrucción al estilo de las imágenes del Event Horizon Telescope: ningún telescopio puede resolver su sombra a esa distancia.',
+ dato:'Uno de los agujeros negros más masivos que se han medido. La luz tarda unas dos semanas en cruzar su horizonte — y ninguna lo ha cruzado dos veces.'},
+{n:'Nebulosa de Orión',tipo:'Nebulosa de emisión',r:1.135e17,kind:'ext',img:'orion',sc:1.05,vis:'foto',dy:0.05,
+ med:'Diámetro: ~24 años luz · a 1,344 al',
+ datos:[['Diámetro','~24 años luz'],['Distancia','~1,344 años luz'],['Estrellas en el mosaico','más de 3,000'],['Edad del cúmulo central','1 a 3 millones de años']],
+ txt:'La guardería de estrellas masivas más cercana a nosotros. La encienden cuatro estrellas jóvenes y calientes en su centro, el Trapecio, cuya radiación ultravioleta hace brillar el gas. En este mosaico del Hubble hay más de 3,000 estrellas, muchas tan jóvenes que conservan discos de polvo a su alrededor: sistemas planetarios en plena gestación.',
+ dato:'Visible a simple vista, como una «estrella» borrosa en la espada de Orión.'},
+{n:'Omega Centauri',tipo:'Cúmulo globular',r:7.1e17,kind:'ext',img:'omegacen',sc:1.15,vis:'foto',dy:-0.1,
+ med:'Diámetro: ~150 años luz · ~10 millones de estrellas',
+ datos:[['Diámetro','~150 años luz'],['Estrellas','~10 millones'],['Edad','~12,000 millones de años'],['Distancia','~17,000 años luz']],
+ txt:'El cúmulo globular más grande y brillante de la Vía Láctea. Desde el centro y sur de México se ve en primavera, bajo en el horizonte sur, como una estrella algo borrosa. En 2024 se encontraron en su centro estrellas tan veloces que delatan un agujero negro de masa intermedia —al menos 8,200 soles—, el eslabón que faltaba entre los agujeros negros estelares y los supermasivos.',
+ dato:'Quizá sea el núcleo desnudo de una galaxia que la Vía Láctea devoró hace eones.'},
+{n:'La Vía Láctea',tipo:'Galaxia espiral barrada — nuestra casa',r:4.73e20,kind:'ext',img:'milkyway',sc:1.12,tilt:0.55,rot:-0.35,vis:'ilus',dy:0.08,
+ med:'Diámetro: ~100,000 años luz · 100–400 mil millones de estrellas',
+ datos:[['Diámetro','~100,000 años luz'],['Estrellas','100 a 400 mil millones'],['Edad','~13,600 millones de años'],['El Sol','a ~26,700 años luz del centro']],
+ txt:'Nadie ha visto nuestra galaxia desde fuera, ni lo hará: la imagen es una ilustración construida con datos de telescopios. Sabemos que es una espiral barrada —con una barra de estrellas en el centro— porque contamos y medimos estrellas desde dentro, como quien dibuja el mapa de un bosque sin salir de él. Vivimos en el brazo de Orión, un brazo menor, a medio camino del borde.',
+ dato:'El Sol tarda ~230 millones de años en dar una vuelta completa. La última vez que estuvimos «aquí», los dinosaurios apenas comenzaban.'},
+{n:'Andrómeda (M31)',tipo:'Galaxia espiral',r:1.04e21,kind:'ext',img:'andromeda',sc:1.3,vis:'foto',dy:-0.06,
+ med:'Diámetro: ~220,000 años luz · a 2.5 millones de al',
+ datos:[['Diámetro','~220,000 años luz'],['Estrellas','~1 billón'],['Distancia','2.5 millones de años luz'],['Velocidad','se acerca a 110 km/s']],
+ txt:'Uno de los objetos más lejanos que puedes ver a simple vista: en una noche oscura, una mancha alargada en la constelación de Andrómeda. En 1923 Edwin Hubble encontró en ella una estrella variable, midió su distancia y demostró que era otra galaxia. Ese día el universo conocido dejó de terminar en el borde de la Vía Láctea.',
+ dato:'Su destino ya no es seguro: un estudio de 2025 en Nature Astronomy da apenas un 50 % de probabilidad de que choquemos con ella en los próximos 10,000 millones de años.'},
+{n:'IC 1101',tipo:'Galaxia elíptica supergigante',r:1.89e22,kind:'ext',img:'ic1101',sc:1.4,vis:'foto',dy:0.1,
+ med:'Diámetro (con halo): hasta ~4 millones de al (discutido)',
+ datos:[['Diámetro','hasta ~4 millones de al con su halo (discutido)'],['Distancia','~1,000 millones de años luz'],['Hogar','centro del cúmulo Abell 2029'],['Estrellas','sobre todo viejas y rojizas']],
+ txt:'Las elípticas gigantes como esta son el resultado de muchas fusiones: galaxias devoradas una tras otra hasta perder toda estructura. Casi no forma estrellas nuevas. El tamaño que suele citarse incluye un halo difuso que se confunde con la luz del propio cúmulo, y por eso las cifras varían tanto según quién y cómo mida.',
+ dato:'En su halo cabrían, una junto a otra, decenas de Vías Lácteas.'},
+{n:'El Grupo Local',tipo:'Grupo de galaxias',r:4.73e22,kind:'group',vis:'rec',dy:-0.08,
+ med:'Diámetro: ~10 millones de años luz · más de 80 galaxias',
+ datos:[['Diámetro','~10 millones de años luz'],['Galaxias','más de 80, casi todas enanas'],['Las grandes','Andrómeda, la Vía Láctea y el Triángulo']],
+ txt:'Nuestro barrio galáctico. Dos galaxias dominan —Andrómeda y la Vía Láctea— y casi todo lo demás son galaxias enanas que las orbitan, como las Nubes de Magallanes. Seguimos descubriendo miembros: muchos son tan tenues que solo aparecen al contar estrellas una por una.',
+ dato:'Nuestra colonia cósmica, atada por la paciencia de la gravedad.'},
+{n:'Cúmulo de Virgo',tipo:'Cúmulo de galaxias',r:7.1e22,kind:'galcluster',vis:'rec',dy:0.12,
+ med:'Diámetro: ~15 millones de años luz · más de 1,300 galaxias',
+ datos:[['Diámetro','~15 millones de años luz'],['Galaxias','más de 1,300'],['Distancia','~54 millones de años luz'],['En su centro','M87 y su agujero negro']],
+ txt:'El gran cúmulo de galaxias más cercano. En su centro reina M87, la galaxia del primer agujero negro fotografiado. El gas entre sus galaxias está a decenas de millones de grados y brilla en rayos X. Su masa es tan grande que frena, en nuestra región, la expansión del universo.',
+ dato:'Su gravedad tira de nosotros: caemos lentamente hacia él.'},
+{n:'Laniakea',tipo:'Supercúmulo',r:2.46e24,kind:'web',vis:'rec',dy:-0.05,
+ med:'Extensión: ~520 millones de años luz · ~100,000 galaxias',
+ datos:[['Extensión','~520 millones de años luz'],['Galaxias','~100,000'],['Masa','~10¹⁷ soles'],['Definido en','2014 (Tully et al., Nature)']],
+ txt:'No se definió por cómo se ve, sino por cómo se mueve: un equipo encabezado por Brent Tully midió la velocidad de miles de galaxias y trazó hacia dónde fluyen, como quien dibuja las cuencas de los ríos. Todas las galaxias de Laniakea «desembocan» hacia el Gran Atractor. Más allá de esa divisoria, fluyen hacia otros lados.',
+ dato:'«Cielo inmenso e inconmensurable», en hawaiano. Es nuestra dirección postal más grande.'},
+{n:'Gran Muralla Hércules–Corona Boreal',tipo:'Gran estructura (en disputa)',r:4.73e25,kind:'wall',vis:'rec',dy:0.1,
+ med:'Extensión: ~10,000 millones de años luz (hipotética)',
+ datos:[['Extensión','~10,000 millones de años luz (propuesta)'],['Detectada por','un exceso de estallidos de rayos gamma'],['Estatus','en debate']],
+ txt:'No se ve: se infiere de un exceso de estallidos de rayos gamma —las explosiones más violentas del universo— en una región del cielo. Si existe, es tan grande que contradice la idea de que, a gran escala, el universo es homogéneo. Desde entonces se han propuesto otras «estructuras imposibles», como el Arco Gigante (2021) y el Gran Anillo (2024).',
+ dato:'Lo honesto es decirlo: sigue en debate.'},
+{n:'El universo observable',tipo:'Horizonte cosmológico',r:4.4e26,kind:'universe',card:'deepfield',vis:'rec',
+ med:'Diámetro: ~93,000 millones de años luz · ~2 billones de galaxias',
+ datos:[['Diámetro','~93,000 millones de años luz'],['Edad del universo','13,800 millones de años'],['Galaxias','~2 billones (estimación)'],['Su borde visible','el fondo de microondas, a ~45,400 millones de al']],
+ txt:'¿Cómo puede medir 93,000 millones de años luz si solo tiene 13,800 millones de años? Porque el espacio se ha estirado mientras la luz viajaba: los objetos cuya luz nos llega hoy están ahora mucho más lejos. El borde de lo visible es el fondo cósmico de microondas, la luz liberada 380,000 años después del Big Bang. Su mapa tiñe el borde de este círculo.',
+ dato:'Y es solo la burbuja cuya luz ha tenido tiempo de alcanzarnos. El Universo entero podría ser inmensamente mayor… o infinito.'}
+];
+SIZES.forEach((o,i)=>{o.log=Math.log10(o.r);
+  o.yF=o.dy!==undefined?o.dy:[-0.13,0.15,-0.04,0.18,-0.17,0.05][i%6];o.xF=o.dx||0;o.seed=i*971+13;});
+const SIZES_DESC=[...SIZES].sort((a,b)=>b.r-a.r);
+const BYNAME=Object.fromEntries(SIZES.map(o=>[o.n,o]));
+const LMIN_S=3.85, LMAX_S=26.75;
+
+/* ============================== datos: el viaje ============================== */
+/* d = distancia desde la Tierra (m). Planetas: aproximación mínima. Más allá de la galaxia:
+   distancia comóvil (dónde está HOY el objeto), no el tiempo que viajó su luz. Cosmología: Planck 2018. */
+const TRIP=[
+{n:'Línea de Kármán',d:1.0e5,sub:'100 km: el borde oficial del espacio',kind:'dot',foto:'atmosfera',
+ datos:[['Altura','100 km'],['Densidad del aire','unas dos millonésimas de la del suelo']],
+ txt:'Por convención, aquí empieza el espacio: a 100 km de altura el aire es tan tenue que un avión tendría que volar más rápido que la velocidad orbital para sostenerse con sus alas. La foto muestra el borde de la atmósfera visto desde la órbita: esa franja azul tan delgada es todo el aire que respiramos.'},
+{n:'Estación Espacial',d:4.0e5,sub:'400 km: la casa orbital',kind:'dot',foto:'iss',
+ datos:[['Altitud','~400 km'],['Velocidad','~28,000 km/h'],['Una vuelta','~92 minutos'],['Habitada','sin interrupción desde noviembre de 2000']],
+ txt:'Un laboratorio del tamaño de una cancha de fútbol americano que rodea la Tierra cada 92 minutos. Sus tripulantes ven unos 16 amaneceres al día. No flotan porque ahí no haya gravedad —hay casi 90 % de la terrestre—, sino porque están en caída libre perpetua: caen alrededor de la Tierra sin llegar nunca al suelo.'},
+{n:'Órbita geoestacionaria',d:3.5786e7,sub:'35,786 km: los satélites quietos',kind:'dot',
+ datos:[['Altitud','35,786 km'],['Periodo','un día sidéreo (23 h 56 min)']],
+ txt:'A esta altura un satélite tarda exactamente lo mismo que la Tierra en girar: parece inmóvil en el cielo. Por eso las antenas de televisión satelital apuntan siempre al mismo punto. Arthur C. Clarke popularizó la idea en 1945, cuando no existía un solo satélite.'},
+{n:'La Luna',d:3.844e8,sub:'el único mundo donde hemos puesto el pie',kind:'img',img:'moon',ref:'La Luna'},
+{n:'Marte',d:5.46e10,sub:'aproximación mínima',kind:'img',img:'mars',ref:'Marte'},
+{n:'El Sol',d:1.496e11,sub:'1 UA · 8 min 20 s de luz',kind:'sun',img:'sun',ref:'El Sol'},
+{n:'Júpiter',d:6.28e11,sub:'~4.2 UA en su máximo acercamiento',kind:'img',img:'jupiter',ref:'Júpiter'},
+{n:'Saturno',d:1.2e12,sub:'~8 UA en su máximo acercamiento',kind:'img',img:'saturn',ring:1,ref:'Saturno'},
+{n:'Urano',d:2.6e12,sub:'~17 UA',kind:'img',img:'uranus',ref:'Urano'},
+{n:'Neptuno',d:4.3e12,sub:'~29 UA · 4 h de luz',kind:'img',img:'neptune',ref:'Neptuno'},
+{n:'Plutón',d:5.3e12,sub:'~35 UA hoy',kind:'img',img:'pluto',ref:'Plutón'},
+{n:'Heliopausa',d:1.8e13,sub:'~120 UA: el viento solar se rinde',kind:'ring',
+ datos:[['Distancia','~120 UA (varía con la actividad solar)'],['Cruzada por','Voyager 1 (2012) y Voyager 2 (2018)']],
+ txt:'La burbuja que el viento solar infla a su alrededor termina aquí, donde choca con el gas que llena el espacio entre las estrellas. La Voyager 1 la cruzó en agosto de 2012, a 121 UA; la Voyager 2, en noviembre de 2018. Son los únicos objetos humanos que han salido de ella.'},
+{n:'Voyager 1',d:2.59e13,sub:'~173 UA · cruzará 1 día-luz el 18 nov 2026',kind:'probe',foto:'paleblue',
+ datos:[['Distancia','~173 UA'],['Velocidad','~17 km/s'],['Lanzamiento','5 de septiembre de 1977'],['Día-luz','18 de noviembre de 2026']],
+ txt:'El objeto humano más lejano. El 14 de febrero de 1990, a 6,000 millones de km, giró su cámara y fotografió la Tierra: un punto de apenas 0.12 píxeles en un rayo de luz dispersa (en la ficha). Carl Sagan lo llamó «un punto azul pálido». Su energía se agota y la NASA ha ido apagando instrumentos para que siga hablando un poco más.'},
+{n:'Nube de Oort (interior)',d:3.0e14,sub:'~2,000 UA de cometas dormidos',kind:'comet',
+ datos:[['Inicio estimado','~2,000 a 5,000 UA'],['Contenido','quizá billones de cuerpos helados']],
+ txt:'Nadie ha visto la nube de Oort: se deduce de los cometas de periodo larguísimo que llegan desde todas direcciones. Guardaría billones de cuerpos helados, restos de la formación de los planetas, lanzados hasta aquí por la gravedad de Júpiter y Saturno. La Voyager 1 tardará unos 300 años en alcanzar su borde interior.'},
+{n:'Nube de Oort (exterior)',d:1.5e16,sub:'~1.6 años luz: la última frontera del Sol',kind:'comet',
+ datos:[['Distancia','~100,000 UA · ~1.6 años luz'],['Voyager 1','llegaría en unos 30,000 años']],
+ txt:'El límite de la influencia gravitatoria del Sol: más allá, pesan más las otras estrellas y la propia galaxia. Desde aquí, el Sol es solo una estrella brillante entre muchas.'},
+{n:'Próxima Centauri',d:4.017e16,sub:'4.24 años luz',kind:'star',col:'#FF9A6A',ref:'Próxima Centauri'},
+{n:'Sirio',d:8.14e16,sub:'8.6 años luz',kind:'star',col:'#DCE8FF',ref:'Sirio A'},
+{n:'Betelgeuse',d:5.2e18,sub:'~550 años luz',kind:'star',col:'#FF9E5C',ref:'Betelgeuse'},
+{n:'Sagitario A*',d:2.53e20,sub:'~26,700 al: el centro galáctico',kind:'bh',ref:'Sagitario A*'},
+{n:'Gran Nube de Magallanes',d:1.51e21,sub:'~160,000 al: galaxia satélite',kind:'galaxy',foto:'lmc',
+ datos:[['Distancia','~160,000 años luz'],['Diámetro','~32,000 años luz'],['Estrellas','~30 mil millones']],
+ txt:'Una galaxia enana satélite de la nuestra, visible a simple vista desde el hemisferio sur como un jirón desprendido de la Vía Láctea. En 1987 estalló en ella la supernova SN 1987A, la más cercana observada desde la invención del telescopio. Dentro de unos 2,500 millones de años chocará con la Vía Láctea.'},
+{n:'Andrómeda',d:2.37e22,sub:'2.5 millones de años luz',kind:'galaxy',ref:'Andrómeda (M31)'},
+{n:'Cúmulo de Virgo',d:5.1e23,sub:'~54 millones de años luz',kind:'cluster',ref:'Cúmulo de Virgo'},
+{n:'MoM-z14',d:3.21e26,sub:'hoy a ~33,900 millones de al · su luz viajó 13,500 millones de años',kind:'galaxy',foto:'momz14',
+ datos:[['Distancia hoy (comóvil)','~33,900 millones de años luz'],['Viaje de su luz','~13,500 millones de años'],['La vemos como era','280 millones de años tras el Big Bang'],['Corrimiento al rojo','z = 14.44']],
+ txt:'La galaxia más lejana confirmada. Su luz salió hace 13,500 millones de años; mientras viajaba, el espacio se estiró, y hoy esa galaxia está a unos 33,900 millones de años luz. Es pequeña, compacta y ya brillaba con una intensidad que los modelos no esperaban tan temprano. Por eso aquí aparece más lejos de lo que su luz «tardó».'},
+{n:'Fondo de microondas · el borde',d:4.4e26,sub:'la luz más antigua (~45,400 millones de al) · el borde (~46,500)',kind:'edge',foto:'cmb',ref:'El universo observable',
+ datos:[['Fondo de microondas','~45,400 millones de al (comóvil)'],['Liberado','380,000 años tras el Big Bang'],['Borde observable','~46,500 millones de al'],['Temperatura hoy','2.725 K']],
+ txt:'Justo antes del borde está la luz más antigua que existe: el fondo cósmico de microondas, liberado cuando el universo tenía 380,000 años y se volvió transparente. Su origen está hoy a ~45,400 millones de años luz; el borde del universo observable, a ~46,500. En esta escala son casi el mismo punto. No es un muro: es hasta donde ha podido llegarnos una señal desde el principio — y esa esfera está centrada exactamente en ti.'}
+];
+TRIP.forEach((m,i)=>{m.log=Math.log10(m.d);m.seed=i*577+7;});
+const LMIN_T=4.9, LMAX_T=26.75;
+
+/* ============================== narración ============================== */
+const NARR_S=[
+{a:3.8,b:5.95,e:'lo más denso',t:'Una estrella de neutrones: más masa que el Sol en una esfera de 24 km, el tamaño de una ciudad. Empezamos por lo pequeño para que lo grande duela más.'},
+{a:5.95,b:7.1,e:'mundos de piedra',t:'Plutón, la Luna, Mercurio, Marte, Venus, la Tierra… y una estrella muerta, Sirio B, del tamaño de nuestro planeta. Todo lo que ha vivido y muerto en la historia humana lo hizo sobre esa esfera azul que ahora te cabe en la mirada.'},
+{a:7.1,b:8.35,e:'los gigantes',t:'Urano, Neptuno, Saturno, Júpiter: en Júpiter caben 1,300 Tierras. Y observa a Próxima Centauri: una estrella entera, apenas mayor que él. El cosmos también tiene humildes.'},
+{a:8.35,b:9.6,e:'el Sol',t:'Nuestra estrella: un millón de Tierras cabrían en su interior. Y sin embargo, en el censo galáctico, es del montón. Esto me sigue asombrando.'},
+{a:9.6,b:11.2,e:'gigantes naranjas y azules',t:'Sagitario A*, el agujero negro de nuestra galaxia, cabría dentro de la órbita de Mercurio. Arcturus, Aldebarán, Rigel: el Sol ya es un punto. Estás viendo su futuro.'},
+{a:11.2,b:12.7,e:'las hipergigantes',t:'Antares, Betelgeuse, VY Canis Majoris, Stephenson 2-18. Puesta en el centro del Sistema Solar, la mayor rebasaría la órbita de Saturno. Los halos punteados son honestidad: medimos gigantes desde muy lejos.'},
+{a:12.7,b:15.6,e:'los monstruos',t:'M87*, el primer agujero negro fotografiado: su horizonte es mayor que la órbita de Plutón. Y TON 618: ~66,000 millones de soles, un horizonte de 1,300 UA. La luz tarda dos semanas en cruzarlo.'},
+{a:15.6,b:18.6,e:'cunas y enjambres',t:'La Nebulosa de Orión: 24 años luz de gas pariendo estrellas ahora mismo. Omega Centauri: diez millones de soles ancianos apiñados. Los astros también viven en multitud.'},
+{a:18.6,b:21.4,e:'las galaxias',t:'La Vía Láctea —dibujada, porque nadie la ha visto desde fuera— y Andrómeda, fotografiada desde aquí. Cada punto de luz son millones de soles.'},
+{a:21.4,b:23.4,e:'ciudades de galaxias',t:'IC 1101, el Grupo Local, el Cúmulo de Virgo. Las galaxias se agrupan como luciérnagas alrededor de nada visible: la gravedad es paciente, y siempre gana.'},
+{a:23.4,b:25.9,e:'Laniakea',t:'«Cielo inmenso», en hawaiano: cien mil galaxias fluyendo juntas hacia el Gran Atractor. Y más allá, la Gran Muralla Hércules–Corona Boreal, tan vasta que incomoda a nuestros propios principios cosmológicos.'},
+{a:25.9,b:27.2,e:'todo lo observable',t:'93,000 millones de años luz. Unos dos billones de galaxias, según una estimación con datos del Hubble. El borde brilla con la luz más antigua. Mi desafío: si cada punto del cosmos ve su propia esfera observable… ¿qué es «el todo»?'}
+];
+const NARR_T=[
+{a:4.8,b:7.6,e:'despegue',t:'Acabas de cruzar la línea de Kármán, a 100 km de altura. Todo lo humano — guerras, sinfonías, tu taza de café — queda bajo esa delgada película azul que ves encogerse.'},
+{a:7.6,b:9.4,e:'la Luna',t:'384,400 km. En este hueco cabrían, en fila, todos los demás planetas del Sistema Solar. Es el único mundo donde hemos puesto el pie; en abril de 2026, la tripulación de Artemis II llegó aún más lejos al rodearla: unos 406,800 km.'},
+{a:9.4,b:11.45,e:'hacia el Sol',t:'La luz — lo más veloz que existe — tarda 8 minutos y 20 segundos en cubrir esta distancia. Mirar el Sol es, literalmente, mirar el pasado.'},
+{a:11.45,b:13.0,e:'los gigantes',t:'Júpiter, Saturno, Urano, Neptuno, Plutón… El Sol, a tus espaldas, ya es solo la estrella más brillante del cielo. Neptuno recibe 900 veces menos luz que la Tierra.'},
+{a:13.0,b:14.25,e:'la frontera',t:'La heliopausa: aquí el viento del Sol se rinde ante el de las demás estrellas. La Voyager 1 cruza este silencio a 17 km/s desde 1977. El 18 de noviembre de 2026 será el primer objeto humano a un día-luz de la Tierra: su señal tardará 24 horas en llegarnos.'},
+{a:14.25,b:16.35,e:'la nube de Oort',t:'Billones de cometas dormidos, tan dispersos que si flotaras entre ellos no verías ninguno. El Sol, desde aquí, es una estrella más.'},
+{a:16.35,b:17.6,e:'otras estrellas',t:'Próxima Centauri: 4.24 años luz. A la velocidad de la Voyager tardaríamos unos 75,000 años en llegar. Observa esto: el espacio no es que sea grande — es que es casi todo lo que hay.'},
+{a:17.6,b:19.6,e:'el vecindario estelar',t:'Sirio, Vega, Betelgeuse… Casi todas las estrellas que ves de noche viven en una burbuja de unos mil años luz: una mota dentro de nuestra propia galaxia.'},
+{a:19.6,b:20.9,e:'el corazón de la galaxia',t:'Sagitario A*: cuatro millones de soles comprimidos en un punto de silencio. Todo lo que conoces — cada estrella, cada mundo — orbita alrededor de esto.'},
+{a:20.9,b:22.0,e:'saliendo de casa',t:'Las Nubes de Magallanes: galaxias enanas que escoltan a la Vía Láctea. Por primera vez puedes mirar atrás y ver nuestra galaxia entera, de una sola pieza.'},
+{a:22.0,b:23.25,e:'Andrómeda',t:'2.5 millones de años luz. La luz que hoy nos llega de ella partió cuando nuestros ancestros tallaban las primeras piedras. Y es la galaxia vecina.'},
+{a:23.25,b:25.4,e:'el océano de galaxias',t:'Aquí las galaxias son gotas. El Cúmulo de Virgo tira de nosotros; fluimos con cien mil galaxias hacia el Gran Atractor, dentro de Laniakea.'},
+{a:25.4,b:26.58,e:'la galaxia más lejana',t:'MoM-z14: su luz partió 280 millones de años después del Big Bang y viajó 13,500 millones de años. Pero el espacio se estiró en el camino: hoy está a ~33,900 millones de años luz. Mirar lejos es mirar el amanecer del tiempo.'},
+{a:26.58,b:26.8,e:'el borde',t:'La luz más antigua — el fondo de microondas — y, casi pegado, el horizonte de lo que la luz ha podido contarnos. Mi desafío final: esta esfera está centrada exactamente en ti. Entonces… ¿dónde está el centro del Universo?'}
+];
+const TICKS_S=[{l:4.08,t:'Neutrones'},{l:6.80,t:'Tierra'},{l:8.84,t:'Sol',big:1},{l:11.17,t:'1 UA'},{l:15.98,t:'1 año luz',big:1},{l:20.67,t:'Vía Láctea'},{l:26.64,t:'Universo',big:1}];
+const TICKS_T=[{l:8.58,t:'Luna',big:1},{l:11.17,t:'Sol',big:1},{l:13.41,t:'1 día-luz'},{l:15.98,t:'1 año luz',big:1},{l:20.40,t:'Sgr A*'},{l:22.37,t:'Andrómeda'},{l:26.64,t:'Borde',big:1}];
+
+/* tu velocidad real (rescatado de la versión de junio, con la velocidad respecto al fondo de microondas corregida) */
+const VEL=[
+ {k:'↻',l:'La Tierra gira',v:1674,n:'en el ecuador; en la Ciudad de México, ~1,580 km/h'},
+ {k:'➜',l:'La Tierra orbita el Sol',v:107000,n:'30 km cada segundo'},
+ {k:'➜',l:'El Sol orbita la galaxia',v:828000,n:'230 km/s, rumbo a la constelación del Cisne'},
+ {k:'➜',l:'La Vía Láctea cae hacia el Gran Atractor',v:2200000,n:'~600 km/s respecto al fondo de microondas'}
+];
+
+/* ============================== estado ============================== */
+const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+let mode='sizes';
+let camS={v:6.3,t:6.3}, camT={v:LMIN_T,t:LMIN_T};
+let playing=false, spd=0.24;
+let hits=[], hitsT=[];
+let velSm=0, prevShown=camS.v;
+let starOffBase=0;
+let lightMode=false, lsT=0;
+
+/* ============================== lienzo ============================== */
+const cv=$('cv'), ctx=cv.getContext('2d');
+let W=0,H=0,DPR=1,minDim=0,stars=[],gals=[],vg=null;
+function resize(){
+  DPR=Math.min(2,window.devicePixelRatio||1);
+  W=window.innerWidth;H=window.innerHeight;minDim=Math.min(W,H);
+  cv.width=W*DPR;cv.height=H*DPR;cv.style.width=W+'px';cv.style.height=H+'px';
+  ctx.setTransform(DPR,0,0,DPR,0,0);
+  const rr=mulberry32(42);stars=[];gals=[];
+  for(let i=0;i<240;i++)stars.push({x:rr(),y:rr(),s:0.4+rr()*1.3,ph:rr()*TAU,dep:0.3+rr()*0.7,b:0.25+rr()*0.6});
+  for(let i=0;i<150;i++)gals.push({x:rr(),y:rr(),s:0.8+rr()*2.6,rot:rr()*TAU,sq:0.3+rr()*0.6,w:rr()>0.45,dep:0.3+rr()*0.7,b:0.3+rr()*0.5});
+  vg=ctx.createRadialGradient(W/2,H*0.45,minDim*0.32,W/2,H*0.5,Math.max(W,H)*0.78);
+  vg.addColorStop(0,'rgba(4,5,12,0)');vg.addColorStop(1,'rgba(4,5,12,0.55)');
+}
+window.addEventListener('resize',resize);resize();
+
+/* fondo que cambia con la escala: estrellas → campo de galaxias → brillo del fondo de microondas */
+function drawStars(t,par,cam){
+  const sa=cam<19?1:clamp(1-(cam-19)/3,0.1,1);
+  for(const s of stars){
+    let px=(s.x*W + par*42*s.dep)%W; if(px<0)px+=W;
+    const py=s.y*H;
+    const tw=reduced?1:(0.75+0.25*Math.sin(t*0.9+s.ph));
+    ctx.globalAlpha=s.b*tw*sa;
+    ctx.fillStyle=s.dep>0.75?'#EDE7D9':'#9FB4D8';
+    ctx.fillRect(px,py,s.s,s.s);
+  }
+  const ga=clamp((cam-20)/3,0,1)*0.85;
+  if(ga>0.01){
+    for(const g of gals){
+      let px=(g.x*W + par*30*g.dep)%W; if(px<0)px+=W;
+      ctx.globalAlpha=ga*g.b;miniGal(px,g.y*H,g.s,g.rot,g.sq,g.w);
+    }
+  }
+  ctx.globalAlpha=1;
+  const ca=clamp((cam-25.2)/1.4,0,1)*0.2;
+  if(ca>0.005){
+    const g=ctx.createRadialGradient(W/2,H/2,minDim*0.2,W/2,H/2,Math.max(W,H)*0.75);
+    g.addColorStop(0,'rgba(255,150,90,0)');g.addColorStop(1,`rgba(255,150,90,${ca})`);
+    ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+  }
+}
+
+/* ============================== dibujo de astros ============================== */
+function det(o,gen){ if(!o._d)o._d=gen(mulberry32(o.seed)); return o._d; }
+function circle(x,y,r){ctx.beginPath();ctx.arc(x,y,r,0,TAU);}
+
+function shadeBall(x,y,r,dark=0.55){
+  const g=ctx.createRadialGradient(x-r*0.38,y-r*0.38,r*0.15,x,y,r*1.05);
+  g.addColorStop(0,'rgba(0,0,0,0)');g.addColorStop(0.68,'rgba(3,4,10,0.08)');g.addColorStop(1,`rgba(3,4,10,${dark})`);
+  ctx.fillStyle=g;circle(x,y,r);ctx.fill();
+}
+function drawMoon(x,y,r,o){
+  const d=det(o,rr=>{const c=[];for(let i=0;i<9;i++)c.push({a:rr()*TAU,q:0.15+rr()*0.7,s:0.06+rr()*0.14});return c;});
+  const g=ctx.createRadialGradient(x-r*0.3,y-r*0.3,r*0.1,x,y,r);
+  g.addColorStop(0,'#CFCBC3');g.addColorStop(1,'#84817C');
+  ctx.fillStyle=g;circle(x,y,r);ctx.fill();
+  if(r>10){ctx.save();circle(x,y,r);ctx.clip();
+    for(const c of d){const cx=x+Math.cos(c.a)*r*c.q,cy=y+Math.sin(c.a)*r*c.q,cr=r*c.s;
+      ctx.fillStyle='rgba(90,88,84,0.55)';circle(cx,cy,cr);ctx.fill();
+      ctx.strokeStyle='rgba(220,216,208,0.35)';ctx.lineWidth=Math.max(0.6,cr*0.12);
+      ctx.beginPath();ctx.arc(cx,cy,cr,Math.PI*0.9,Math.PI*1.7);ctx.stroke();}
+    ctx.restore();}
+  shadeBall(x,y,r);
+}
+function drawMars(x,y,r,o){
+  const d=det(o,rr=>{const b=[];for(let i=0;i<7;i++)b.push({a:rr()*TAU,q:rr()*0.8,s:0.1+rr()*0.22});return b;});
+  const g=ctx.createRadialGradient(x-r*0.3,y-r*0.3,r*0.1,x,y,r);
+  g.addColorStop(0,'#DE9367');g.addColorStop(1,'#8C4A30');
+  ctx.fillStyle=g;circle(x,y,r);ctx.fill();
+  if(r>10){ctx.save();circle(x,y,r);ctx.clip();
+    ctx.fillStyle='rgba(110,55,35,0.45)';
+    for(const b of d){circle(x+Math.cos(b.a)*r*b.q,y+Math.sin(b.a)*r*b.q,r*b.s);ctx.fill();}
+    ctx.fillStyle='rgba(245,240,235,0.8)';
+    ctx.beginPath();ctx.ellipse(x,y-r*0.86,r*0.34,r*0.13,0,0,TAU);ctx.fill();
+    ctx.restore();}
+  shadeBall(x,y,r);
+}
+/* ---- Tierra procedural: esfera ortográfica, ruido 3D, relieve, nubes y atmósfera ---- */
+let EARTH_TEX=null;
+function h3(x,y,z){let h=Math.imul(x,374761393)^Math.imul(y,668265263)^Math.imul(z,1442695041);h=Math.imul(h^(h>>>13),1274126177);h^=h>>>16;return(h>>>0)/4294967296;}
+function vnoise(x,y,z){
+  const xi=Math.floor(x),yi=Math.floor(y),zi=Math.floor(z);
+  let xf=x-xi,yf=y-yi,zf=z-zi;
+  xf=xf*xf*(3-2*xf);yf=yf*yf*(3-2*yf);zf=zf*zf*(3-2*zf);
+  const a=h3(xi,yi,zi),b=h3(xi+1,yi,zi),c=h3(xi,yi+1,zi),d=h3(xi+1,yi+1,zi),
+        e=h3(xi,yi,zi+1),f=h3(xi+1,yi,zi+1),g=h3(xi,yi+1,zi+1),h=h3(xi+1,yi+1,zi+1);
+  const x1=a+(b-a)*xf,x2=c+(d-c)*xf,x3=e+(f-e)*xf,x4=g+(h-g)*xf;
+  const y1=x1+(x2-x1)*yf,y2=x3+(x4-x3)*yf;
+  return y1+(y2-y1)*zf;
+}
+function fbm(x,y,z,oct){let a=0,amp=0.5,f=1,n=0;for(let i=0;i<oct;i++){a+=amp*vnoise(x*f,y*f,z*f);n+=amp;amp*=0.5;f*=2.03;}return a/n;}
+const sstep=(a,b,x)=>{const t=clamp((x-a)/(b-a),0,1);return t*t*(3-2*t);};
+const mix3=(A,B,t)=>[A[0]+(B[0]-A[0])*t,A[1]+(B[1]-A[1])*t,A[2]+(B[2]-A[2])*t];
+function buildEarth(){
+  const N=640,cvs=document.createElement('canvas');cvs.width=cvs.height=N;
+  const c=cvs.getContext('2d'),img=c.createImageData(N,N),D=img.data;
+  let L=[-0.55,0.5,0.67];const ln=Math.hypot(L[0],L[1],L[2]);L=L.map(v=>v/ln);
+  const Hh=[L[0],L[1],L[2]+1];const hn=Math.hypot(Hh[0],Hh[1],Hh[2]);Hh[0]/=hn;Hh[1]/=hn;Hh[2]/=hn;
+  const tilt=0.4,ct=Math.cos(tilt),st=Math.sin(tilt),lon=2.35,cl=Math.cos(lon),sl=Math.sin(lon);
+  const DEEP=[8,30,82],SHAL=[30,120,170],COAST=[70,165,170],DESERT=[205,176,112],SAV=[160,164,86],
+        FOREST=[48,108,50],JUNGLE=[26,86,44],ROCK=[126,112,98],SNOW=[240,244,248];
+  for(let j=0;j<N;j++){
+    const v=(j+0.5)/N*2-1;
+    for(let i=0;i<N;i++){
+      const u=(i+0.5)/N*2-1,rr=u*u+v*v;
+      if(rr>=1)continue;
+      const rad=Math.sqrt(rr),edge=Math.min(1,(1-rad)*N*0.5),nz=Math.sqrt(1-rr);
+      const px=u,py=-v,pz=nz;
+      let qx=px*ct-py*st,qy=px*st+py*ct,qz=pz;
+      const rx=qx*cl+qz*sl,rz=-qx*sl+qz*cl;qx=rx;qz=rz;
+      const e=fbm(qx*1.25+3.1,qy*1.25+7.7,qz*1.25+1.3,6);
+      const thr=0.53,lat=Math.abs(qy);
+      let col,ocean=false;
+      const ice=lat>0.9+(e-0.5)*0.3;
+      if(ice){col=SNOW;}
+      else if(e<thr){
+        ocean=true;const d=thr-e;
+        col=d<0.035?mix3(COAST,SHAL,d/0.035):mix3(SHAL,DEEP,sstep(0.035,0.16,d));
+      }else{
+        const h=e-thr,m=fbm(qx*2.4+9.2,qy*2.4+4.4,qz*2.4+2.2,4);
+        const dry=sstep(0.52,0.4,m);
+        col=mix3(FOREST,SAV,clamp((0.56-m)*5,0,1));
+        col=mix3(col,JUNGLE,sstep(0.58,0.7,m)*(1-lat));
+        col=mix3(col,DESERT,dry*(1-sstep(0.55,0.8,lat)));
+        col=mix3(col,ROCK,sstep(0.08,0.17,h));
+        col=mix3(col,SNOW,Math.max(sstep(0.78,0.88,lat+h*0.4),sstep(0.19,0.26,h)));
+        const edgeMix=sstep(0,0.006,h);
+        col=mix3(COAST,col,edgeMix);
+      }
+      const cn=fbm(qx*2.7+20,qy*3.2+11,qz*2.7+5,5);
+      const cloud=sstep(0.54,0.74,cn)*0.9;
+      const lam=Math.max(0,px*L[0]+py*L[1]+pz*L[2]);
+      let light=0.07+0.93*Math.pow(lam,0.85);
+      let r0=col[0]*light,g0=col[1]*light,b0=col[2]*light;
+      if(ocean&&!ice){
+        const sp=Math.max(0,px*Hh[0]+py*Hh[1]+pz*Hh[2]);
+        const spec=Math.pow(sp,300)*0.6*(1-cloud);
+        r0+=255*spec;g0+=250*spec;b0+=235*spec;
+      }
+      const cv_=cloud*(0.12+0.88*Math.pow(lam,0.7));
+      r0=r0*(1-cloud)+238*cv_;g0=g0*(1-cloud)+242*cv_;b0=b0*(1-cloud)+248*cv_;
+      const rim=Math.pow(1-nz,3)*(0.25+0.75*lam);
+      r0+=60*rim;g0+=130*rim;b0+=255*rim;
+      const k=(j*N+i)*4;
+      D[k]=clamp(r0,0,255);D[k+1]=clamp(g0,0,255);D[k+2]=clamp(b0,0,255);D[k+3]=Math.round(255*edge);
+    }
+  }
+  c.putImageData(img,0,0);
+  return cvs;
+}
+setTimeout(()=>{try{EARTH_TEX=buildEarth();}catch(err){EARTH_TEX=null;}},80);
+function drawEarthProc(x,y,r,o,flip){
+  if(r>6&&EARTH_TEX){
+    const ga=ctx.createRadialGradient(x,y,r*0.97,x,y,r*1.13);
+    ga.addColorStop(0,'rgba(110,170,255,0.4)');ga.addColorStop(1,'rgba(110,170,255,0)');
+    ctx.fillStyle=ga;circle(x,y,r*1.13);ctx.fill();
+    ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality='high';
+    if(flip){ctx.save();ctx.translate(x,y);ctx.scale(-1,1);ctx.drawImage(EARTH_TEX,-r,-r,2*r,2*r);ctx.restore();}
+    else ctx.drawImage(EARTH_TEX,x-r,y-r,2*r,2*r);
+    return;
+  }
+  const d=det(o,rr=>{const land=[];for(let i=0;i<8;i++)land.push({a:rr()*TAU,q:rr()*0.82,s:0.12+rr()*0.24,g:rr()>0.35});
+    const cl=[];for(let i=0;i<7;i++)cl.push({a:rr()*TAU,q:rr()*0.85,w:0.2+rr()*0.35,h:0.05+rr()*0.05,rot:rr()*TAU});
+    return{land,cl};});
+  const g=ctx.createRadialGradient(x-r*0.3,y-r*0.3,r*0.1,x,y,r);
+  g.addColorStop(0,'#4E8BD4');g.addColorStop(1,'#1B3E77');
+  ctx.fillStyle=g;circle(x,y,r);ctx.fill();
+  if(r>9){ctx.save();circle(x,y,r);ctx.clip();
+    for(const L of d.land){ctx.fillStyle=L.g?'rgba(96,148,84,0.9)':'rgba(190,170,110,0.85)';
+      circle(x+Math.cos(L.a)*r*L.q,y+Math.sin(L.a)*r*L.q,r*L.s);ctx.fill();}
+    ctx.fillStyle='rgba(250,250,252,0.85)';
+    ctx.beginPath();ctx.ellipse(x,y-r*0.9,r*0.4,r*0.12,0,0,TAU);ctx.fill();
+    ctx.beginPath();ctx.ellipse(x,y+r*0.92,r*0.36,r*0.1,0,0,TAU);ctx.fill();
+    ctx.fillStyle='rgba(255,255,255,0.28)';
+    for(const c of d.cl){ctx.save();ctx.translate(x+Math.cos(c.a)*r*c.q,y+Math.sin(c.a)*r*c.q);ctx.rotate(c.rot);
+      ctx.beginPath();ctx.ellipse(0,0,r*c.w,r*c.h,0,0,TAU);ctx.fill();ctx.restore();}
+    ctx.restore();
+    ctx.strokeStyle='rgba(140,195,255,0.5)';ctx.lineWidth=Math.max(1,r*0.03);
+    circle(x,y,r*1.015);ctx.stroke();}
+  shadeBall(x,y,r,0.5);
+}
+function drawNeptune(x,y,r,o){
+  const g=ctx.createRadialGradient(x-r*0.3,y-r*0.3,r*0.1,x,y,r);
+  g.addColorStop(0,'#5A8CE0');g.addColorStop(1,'#26479B');
+  ctx.fillStyle=g;circle(x,y,r);ctx.fill();
+  if(r>10){ctx.save();circle(x,y,r);ctx.clip();
+    ctx.fillStyle='rgba(255,255,255,0.09)';
+    ctx.fillRect(x-r,y-r*0.55,2*r,r*0.16);ctx.fillRect(x-r,y+r*0.15,2*r,r*0.12);
+    ctx.fillStyle='rgba(10,20,60,0.35)';
+    ctx.fillRect(x-r,y-r*0.2,2*r,r*0.14);
+    ctx.beginPath();ctx.ellipse(x-r*0.25,y-r*0.35,r*0.22,r*0.11,0,0,TAU);ctx.fill();
+    ctx.restore();}
+  shadeBall(x,y,r,0.5);
+}
+function drawJupiter(x,y,r,o){
+  const bands=['#D9B48C','#C08A5A','#E8D7B8','#B27B4E','#E3C79E','#A96F45','#DCC09A','#C4936B'];
+  ctx.fillStyle='#D9B48C';circle(x,y,r);ctx.fill();
+  if(r>8){ctx.save();circle(x,y,r);ctx.clip();
+    let yy=y-r;const hs=[0.24,0.18,0.3,0.16,0.28,0.2,0.26,0.38];
+    for(let i=0;i<8;i++){ctx.fillStyle=bands[i];ctx.fillRect(x-r,yy,2*r,r*hs[i]+1);yy+=r*hs[i];}
+    ctx.fillStyle='#C4553B';
+    ctx.beginPath();ctx.ellipse(x+r*0.32,y+r*0.34,r*0.2,r*0.115,0,0,TAU);ctx.fill();
+    ctx.strokeStyle='rgba(240,215,180,0.7)';ctx.lineWidth=Math.max(0.8,r*0.02);
+    ctx.beginPath();ctx.ellipse(x+r*0.32,y+r*0.34,r*0.2,r*0.115,0,0,TAU);ctx.stroke();
+    ctx.restore();}
+  shadeBall(x,y,r,0.5);
+}
+function drawStar(x,y,r,o){
+  const c2=o.c2||'#FFD84D';
+  const g1=ctx.createRadialGradient(x,y,r*0.4,x,y,r*2.3);
+  g1.addColorStop(0,rgba(c2,0.55));g1.addColorStop(0.5,rgba(c2,0.14));g1.addColorStop(1,rgba(c2,0));
+  ctx.fillStyle=g1;circle(x,y,r*2.3);ctx.fill();
+  const g2=ctx.createRadialGradient(x-r*0.15,y-r*0.15,0,x,y,r);
+  g2.addColorStop(0,'#FFFDF5');g2.addColorStop(0.45,c2);g2.addColorStop(1,shade(c2,0.55));
+  ctx.fillStyle=g2;circle(x,y,r);ctx.fill();
+  if(r<26){ctx.strokeStyle=rgba(c2,0.5);ctx.lineWidth=1;
+    ctx.beginPath();ctx.moveTo(x-r*2.6,y);ctx.lineTo(x+r*2.6,y);ctx.moveTo(x,y-r*2.6);ctx.lineTo(x,y+r*2.6);ctx.stroke();}
+}
+function drawBH(x,y,r,o){
+  const g1=ctx.createRadialGradient(x,y,r,x,y,r*2.6);
+  g1.addColorStop(0,'rgba(255,150,70,0.22)');g1.addColorStop(1,'rgba(255,150,70,0)');
+  ctx.fillStyle=g1;circle(x,y,r*2.6);ctx.fill();
+  const disk=(side)=>{ctx.save();
+    ctx.translate(x,y);ctx.rotate(-0.3);
+    ctx.beginPath();ctx.rect(-r*3,side<0?-r*3:0,r*6,r*3);ctx.clip();
+    const gd=ctx.createLinearGradient(-r*2.1,0,r*2.1,0);
+    gd.addColorStop(0,'rgba(255,110,50,0.9)');gd.addColorStop(0.5,'rgba(255,220,160,0.95)');gd.addColorStop(1,'rgba(255,110,50,0.9)');
+    ctx.strokeStyle=gd;ctx.lineWidth=r*0.3;
+    ctx.beginPath();ctx.ellipse(0,0,r*1.8,r*0.5,0,0,TAU);ctx.stroke();ctx.restore();};
+  disk(-1);
+  ctx.fillStyle='#000';circle(x,y,r);ctx.fill();
+  disk(1);
+  ctx.strokeStyle='rgba(255,236,200,0.9)';ctx.lineWidth=Math.max(1,r*0.045);
+  circle(x,y,r*1.05);ctx.stroke();
+}
+function drawNebula(x,y,r,o){
+  const d=det(o,rr=>{const b=[];const cols=['94,140,201','196,88,120','84,182,164','226,160,96'];
+    for(let i=0;i<8;i++)b.push({dx:(rr()-0.5)*1.2,dy:(rr()-0.5)*1.0,s:0.3+rr()*0.5,c:cols[(rr()*4)|0],a:0.1+rr()*0.12});
+    const st=[];for(let i=0;i<26;i++)st.push({dx:(rr()-0.5)*1.6,dy:(rr()-0.5)*1.4,s:0.5+rr()*1.4});
+    return{b,st};});
+  ctx.save();ctx.globalCompositeOperation='lighter';
+  for(const b of d.b){const bx=x+b.dx*r,by=y+b.dy*r,br=r*b.s;
+    const g=ctx.createRadialGradient(bx,by,0,bx,by,br);
+    g.addColorStop(0,`rgba(${b.c},${b.a})`);g.addColorStop(1,`rgba(${b.c},0)`);
+    ctx.fillStyle=g;circle(bx,by,br);ctx.fill();}
+  ctx.fillStyle='rgba(240,244,255,0.9)';
+  for(const s of d.st)ctx.fillRect(x+s.dx*r,y+s.dy*r,s.s,s.s);
+  ctx.restore();
+}
+function drawStarCluster(x,y,r,o){
+  const d=det(o,rr=>{const p=[];for(let i=0;i<240;i++){const a=rr()*TAU,q=Math.pow(rr(),1.8);
+    p.push({dx:Math.cos(a)*q,dy:Math.sin(a)*q,s:0.4+rr()*1.3,w:rr()>0.2});}return p;});
+  const g=ctx.createRadialGradient(x,y,0,x,y,r*0.7);
+  g.addColorStop(0,'rgba(255,232,196,0.28)');g.addColorStop(1,'rgba(255,232,196,0)');
+  ctx.fillStyle=g;circle(x,y,r*0.7);ctx.fill();
+  for(const p of d){ctx.fillStyle=p.w?'rgba(255,231,194,0.9)':'rgba(191,212,255,0.85)';
+    ctx.fillRect(x+p.dx*r,y+p.dy*r,p.s,p.s);}
+}
+function galaxyPts(rr,warm){
+  const p=[];const arms=2;
+  for(let i=0;i<300;i++){const arm=i%arms;const t=Math.pow(rr(),0.6);
+    const ang=arm*Math.PI + t*4.8 + (rr()-0.5)*0.55;
+    p.push({dx:Math.cos(ang)*t,dy:Math.sin(ang)*t,s:0.5+rr()*1.2,
+      c:t<0.3?'255,232,196':(rr()>(warm?0.5:0.35)?'191,212,255':'255,220,180'),a:0.35+rr()*0.5});}
+  return p;
+}
+function drawGalaxy(x,y,r,o){
+  if(r<4){const g=ctx.createRadialGradient(x,y,0,x,y,r*2+2);
+    g.addColorStop(0,'rgba(255,236,205,0.9)');g.addColorStop(1,'rgba(255,236,205,0)');
+    ctx.fillStyle=g;circle(x,y,r*2+2);ctx.fill();return;}
+  const d=det(o,rr=>galaxyPts(rr,o.warm));
+  ctx.save();ctx.translate(x,y);ctx.rotate(o.warm?-0.4:0.5);ctx.scale(1,o.sq||0.4);
+  const g=ctx.createRadialGradient(0,0,0,0,0,r*0.5);
+  g.addColorStop(0,'rgba(255,238,208,0.85)');g.addColorStop(0.4,'rgba(255,225,180,0.25)');g.addColorStop(1,'rgba(255,225,180,0)');
+  ctx.fillStyle=g;circle(0,0,r*0.5);ctx.fill();
+  for(const p of d){ctx.fillStyle=`rgba(${p.c},${p.a})`;ctx.fillRect(p.dx*r,p.dy*r,p.s,p.s);}
+  ctx.restore();
+}
+function drawElliptical(x,y,r,o){
+  ctx.save();ctx.translate(x,y);ctx.scale(1,0.72);
+  const g=ctx.createRadialGradient(0,0,0,0,0,r);
+  g.addColorStop(0,'rgba(255,231,198,0.95)');g.addColorStop(0.35,'rgba(255,222,180,0.35)');g.addColorStop(1,'rgba(255,222,180,0)');
+  ctx.fillStyle=g;circle(0,0,r);ctx.fill();ctx.restore();
+}
+function miniGal(x,y,s,rot,sqz,warm){
+  ctx.save();ctx.translate(x,y);ctx.rotate(rot);ctx.scale(1,sqz);
+  const g=ctx.createRadialGradient(0,0,0,0,0,s);
+  g.addColorStop(0,warm?'rgba(255,234,200,0.9)':'rgba(206,222,255,0.85)');
+  g.addColorStop(1,'rgba(220,230,255,0)');
+  ctx.fillStyle=g;circle(0,0,s);ctx.fill();ctx.restore();
+}
+function drawGroup(x,y,r,o){
+  const d=det(o,rr=>{const g=[];for(let i=0;i<14;i++){const a=rr()*TAU,q=Math.pow(rr(),0.7);
+    g.push({dx:Math.cos(a)*q*0.85,dy:Math.sin(a)*q*0.7,s:0.05+rr()*0.11,rot:rr()*TAU,sq:0.3+rr()*0.5,w:rr()>0.4});}
+    g[0].s=0.16;g[1].s=0.14;return g;});
+  for(const m of d)miniGal(x+m.dx*r,y+m.dy*r,r*m.s,m.rot,m.sq,m.w);
+}
+function drawGalCluster(x,y,r,o){
+  const d=det(o,rr=>{const g=[];for(let i=0;i<40;i++){const a=rr()*TAU,q=Math.pow(rr(),1.4);
+    g.push({dx:Math.cos(a)*q,dy:Math.sin(a)*q*0.85,s:0.02+rr()*0.06,rot:rr()*TAU,sq:0.35+rr()*0.6,w:rr()>0.35});}return g;});
+  const g=ctx.createRadialGradient(x,y,0,x,y,r*0.8);
+  g.addColorStop(0,'rgba(180,200,235,0.1)');g.addColorStop(1,'rgba(180,200,235,0)');
+  ctx.fillStyle=g;circle(x,y,r*0.8);ctx.fill();
+  for(const m of d)miniGal(x+m.dx*r,y+m.dy*r,Math.max(1.4,r*m.s),m.rot,m.sq,m.w);
+}
+function webDet(rr,n,sqz){
+  const nd=[];for(let i=0;i<n;i++){const a=rr()*TAU,q=Math.pow(rr(),0.62);
+    nd.push({dx:Math.cos(a)*q,dy:Math.sin(a)*q*sqz,s:0.012+rr()*0.05,w:rr()>0.4});}
+  const ed=[];
+  for(let i=0;i<nd.length;i++){const ds=nd.map((m,j)=>({j,d:(m.dx-nd[i].dx)**2+(m.dy-nd[i].dy)**2}))
+    .filter(e=>e.j!==i).sort((a,b)=>a.d-b.d);
+    ed.push([i,ds[0].j],[i,ds[1].j]);}
+  return{nd,ed};
+}
+function drawWeb(x,y,r,o,sqz=1,hue='147,184,224'){
+  const d=det(o,rr=>webDet(rr,o.kind==='universe'?66:46,sqz));
+  ctx.strokeStyle=`rgba(${hue},0.16)`;ctx.lineWidth=1;
+  ctx.beginPath();
+  for(const[i,j]of d.ed){ctx.moveTo(x+d.nd[i].dx*r,y+d.nd[i].dy*r);ctx.lineTo(x+d.nd[j].dx*r,y+d.nd[j].dy*r);}
+  ctx.stroke();
+  for(const m of d.nd)miniGal(x+m.dx*r,y+m.dy*r,Math.max(1.2,r*m.s),0,0.7,m.w);
+}
+function drawWall(x,y,r,o){drawWeb(x,y,r,o,0.32,'226,180,140');}
+function drawUniverse(x,y,r,o){
+  ctx.save();ctx.setLineDash([6,8]);ctx.strokeStyle='rgba(231,196,107,0.35)';ctx.lineWidth=1.2;
+  circle(x,y,r);ctx.stroke();ctx.setLineDash([]);ctx.restore();
+  ctx.save();circle(x,y,r);ctx.clip();
+  drawWeb(x,y,r*0.96,o,1,'150,175,215');
+  ctx.restore();
+  if(r>150){ctx.fillStyle='#E7C46B';circle(x,y,2.2);ctx.fill();
+    ctx.font='10px '+'ui-monospace,Consolas,monospace';ctx.fillStyle='rgba(231,196,107,0.9)';
+    ctx.textAlign='left';ctx.fillText('· tú estás aquí',x+7,y+3);}
+}
+/* ---- color de cuerpo negro: temperatura (K) → RGB (aprox. de T. Helland) ---- */
+function teffRGB(K){
+  const T=clamp(K,1000,40000)/100;let r,g,b;
+  if(T<=66){r=255;g=99.4708025861*Math.log(T)-161.1195681661;}
+  else{r=329.698727446*Math.pow(T-60,-0.1332047592);g=288.1221695283*Math.pow(T-60,-0.0755148492);}
+  if(T>=66)b=255;else if(T<=19)b=0;else b=138.5177312231*Math.log(T-10)-305.0447927307;
+  return[clamp(r,0,255)|0,clamp(g,0,255)|0,clamp(b,0,255)|0];
+}
+const hexOf=c=>'#'+c.map(v=>v.toString(16).padStart(2,'0')).join('');
+/* ---- estrella reconstruida: oscurecimiento al limbo + convección según su tamaño ---- */
+function buildStarTex(o){
+  const big=o.r>1e11, giant=o.r>3e9;
+  const N=big?320:256, cvs=document.createElement('canvas');cvs.width=cvs.height=N;
+  const c=cvs.getContext('2d'),img=c.createImageData(N,N),D=img.data;
+  const col=teffRGB(o.teff), u=big?0.8:giant?0.7:0.6, s=big?2.3:giant?5:10, k=big?0.5:giant?0.24:0.12;
+  const sx=(o.seed%97)*0.37, sy=(o.seed%53)*0.71;
+  for(let j=0;j<N;j++){const v=(j+0.5)/N*2-1;
+    for(let i=0;i<N;i++){const uu=(i+0.5)/N*2-1,rr=uu*uu+v*v;if(rr>=1)continue;
+      const mu=Math.sqrt(1-rr), edge=Math.min(1,(1-Math.sqrt(rr))*N*0.5);
+      const n=fbm(uu*s+sx,v*s+sy,mu*s,big?3:4);
+      const I=(1-u*(1-mu))*(1-k+2*k*n)*1.12;
+      const redd=1-0.25*(1-mu);
+      const p=(j*N+i)*4;
+      D[p]=clamp(col[0]*I+40*mu*mu,0,255);D[p+1]=clamp(col[1]*I*redd+30*mu*mu,0,255);
+      D[p+2]=clamp(col[2]*I*redd*redd+20*mu*mu,0,255);D[p+3]=255*edge;}}
+  c.putImageData(img,0,0);return cvs;
+}
+function drawStarR(x,y,r,o){
+  const c2=hexOf(teffRGB(o.teff));
+  const gl=o.r>1e11?1.7:2.3;
+  const g1=ctx.createRadialGradient(x,y,r*0.5,x,y,r*gl);
+  g1.addColorStop(0,rgba(c2,0.5));g1.addColorStop(0.5,rgba(c2,0.12));g1.addColorStop(1,rgba(c2,0));
+  ctx.fillStyle=g1;circle(x,y,r*gl);ctx.fill();
+  if(r>5){if(!o._tex)o._tex=buildStarTex(o);ctx.drawImage(o._tex,x-r,y-r,2*r,2*r);}
+  else{ctx.fillStyle=c2;circle(x,y,r);ctx.fill();}
+  if(r<26){ctx.strokeStyle=rgba(c2,0.5);ctx.lineWidth=1;
+    ctx.beginPath();ctx.moveTo(x-r*2.6,y);ctx.lineTo(x+r*2.6,y);ctx.moveTo(x,y-r*2.6);ctx.lineTo(x,y+r*2.6);ctx.stroke();}
+}
+/* ---- estrella de neutrones (reconstrucción): esfera caliente + haces de púlsar ---- */
+function drawNS(x,y,r,o,t){
+  const c2=hexOf(teffRGB(40000));
+  const ang=reduced?0.5:0.5+(t||0)*0.6, L=Math.max(r*9,60);
+  ctx.save();ctx.globalCompositeOperation='lighter';
+  for(const sg of[1,-1]){const a=ang+(sg<0?Math.PI:0);
+    const gx=ctx.createLinearGradient(x,y,x+Math.cos(a)*L,y+Math.sin(a)*L);
+    gx.addColorStop(0,'rgba(170,200,255,0.35)');gx.addColorStop(1,'rgba(170,200,255,0)');
+    ctx.fillStyle=gx;ctx.beginPath();ctx.moveTo(x,y);
+    ctx.arc(x,y,L,a-0.13,a+0.13);ctx.closePath();ctx.fill();}
+  ctx.restore();
+  const g1=ctx.createRadialGradient(x,y,r*0.4,x,y,r*3);
+  g1.addColorStop(0,rgba(c2,0.7));g1.addColorStop(1,rgba(c2,0));
+  ctx.fillStyle=g1;circle(x,y,r*3);ctx.fill();
+  const g2=ctx.createRadialGradient(x-r*0.25,y-r*0.25,0,x,y,r);
+  g2.addColorStop(0,'#FFFFFF');g2.addColorStop(1,'#9DB8FF');ctx.fillStyle=g2;circle(x,y,r);ctx.fill();
+}
+/* ---- fotos ---- */
+let CRED=new Set();
+function useImg(k,a){const im=getImg(k);if(im&&a>0.25)CRED.add(IMG[k].cr);return im;}
+const FALLBACK={moon:drawMoon,mars:drawMars,jupiter:drawJupiter,neptune:drawNeptune,earth:drawEarthProc};
+const FBCOL={pluto:'#C9B49A',mercury:'#9C9690',venus:'#E8D9B0',uranus:'#AEE0E4',sun:'#FFE3A0'};
+function drawPhoto(x,y,r,o){
+  if(o.glow){const g=ctx.createRadialGradient(x,y,r*0.9,x,y,r*1.9);
+    g.addColorStop(0,rgba(o.glow,0.45));g.addColorStop(1,rgba(o.glow,0));ctx.fillStyle=g;circle(x,y,r*1.9);ctx.fill();}
+  const im=useImg(o.img,ctx.globalAlpha);
+  if(im&&r>1.2){ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality='high';ctx.drawImage(im,x-r,y-r,2*r,2*r);return;}
+  if(FALLBACK[o.img])return FALLBACK[o.img](x,y,r,o);
+  const c=FBCOL[o.img]||'#AAAAAA',g=ctx.createRadialGradient(x-r*0.3,y-r*0.3,r*0.1,x,y,r);
+  g.addColorStop(0,c);g.addColorStop(1,shade(c,0.45));ctx.fillStyle=g;circle(x,y,r);ctx.fill();
+}
+function drawEarth(x,y,r,o){
+  if(r>4){const ga=ctx.createRadialGradient(x,y,r*0.97,x,y,r*1.12);
+    ga.addColorStop(0,'rgba(110,170,255,0.38)');ga.addColorStop(1,'rgba(110,170,255,0)');
+    ctx.fillStyle=ga;circle(x,y,r*1.12);ctx.fill();}
+  const im=useImg('earth',ctx.globalAlpha);
+  if(im){ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality='high';ctx.drawImage(im,x-r,y-r,2*r,2*r);return;}
+  drawEarthProc(x,y,r,o);
+}
+function drawSaturn(x,y,r,o){
+  const im=useImg('saturn',ctx.globalAlpha),h=r*2.35;
+  if(im){ctx.drawImage(im,x-h,y-h,2*h,2*h);return;}
+  ctx.strokeStyle='rgba(225,205,160,0.6)';ctx.lineWidth=r*0.35;
+  ctx.beginPath();ctx.ellipse(x,y,r*1.85,r*0.42,-0.08,0,TAU);ctx.stroke();
+  const g=ctx.createRadialGradient(x-r*0.3,y-r*0.3,r*0.1,x,y,r);
+  g.addColorStop(0,'#EAD7A8');g.addColorStop(1,'#9C845A');ctx.fillStyle=g;circle(x,y,r);ctx.fill();
+}
+/* agujero negro fotografiado: el anillo de la imagen mide 2.6 veces el horizonte */
+function drawBHImg(x,y,r,o){
+  const im=useImg(o.img,ctx.globalAlpha);
+  if(im){const h=2.6*r/IMG[o.img].ring;
+    ctx.save();ctx.globalCompositeOperation='lighter';ctx.drawImage(im,x-h,y-h,2*h,2*h);ctx.restore();}
+  else drawBHRec(x,y,r,o);
+  if(r>14){ctx.save();ctx.setLineDash([3,4]);ctx.strokeStyle='rgba(237,231,217,0.35)';ctx.lineWidth=1;
+    circle(x,y,r);ctx.stroke();ctx.restore();}
+}
+/* agujero negro reconstruido, al estilo de las imágenes del EHT */
+function drawBHRec(x,y,r,o){
+  const R=2.6*r;
+  ctx.save();ctx.globalCompositeOperation='lighter';
+  const g=ctx.createRadialGradient(x,y,R*0.55,x,y,R*1.55);
+  g.addColorStop(0,'rgba(255,120,40,0)');g.addColorStop(0.45,'rgba(255,150,60,0.55)');
+  g.addColorStop(0.6,'rgba(255,110,30,0.25)');g.addColorStop(1,'rgba(255,90,20,0)');
+  ctx.fillStyle=g;circle(x,y,R*1.55);ctx.fill();
+  ctx.lineWidth=R*0.32;
+  const gl=ctx.createLinearGradient(x,y-R,x,y+R);
+  gl.addColorStop(0,'rgba(255,170,80,0.08)');gl.addColorStop(1,'rgba(255,215,150,0.55)');
+  ctx.strokeStyle=gl;circle(x,y,R);ctx.stroke();
+  ctx.restore();
+  ctx.fillStyle='rgba(0,0,0,0.9)';circle(x,y,R*0.62);ctx.fill();
+  if(r>14){ctx.save();ctx.setLineDash([3,4]);ctx.strokeStyle='rgba(237,231,217,0.35)';ctx.lineWidth=1;
+    circle(x,y,r);ctx.stroke();ctx.restore();}
+}
+/* objetos extendidos (nebulosas, cúmulos, galaxias): se suman a la luz del fondo */
+const EXTFB={orion:drawNebula,omegacen:drawStarCluster,milkyway:drawGalaxy,andromeda:drawGalaxy,ic1101:drawElliptical};
+function drawExt(x,y,r,o){
+  const im=useImg(o.img,ctx.globalAlpha);
+  if(!im)return EXTFB[o.img](x,y,r,o);
+  const hw=r*(o.sc||1), hh=hw*im.height/im.width;
+  ctx.save();ctx.globalCompositeOperation='lighter';ctx.translate(x,y);
+  if(o.rot)ctx.rotate(o.rot);if(o.tilt)ctx.scale(1,o.tilt);
+  ctx.drawImage(im,-hw,-hh,2*hw,2*hh);ctx.restore();
+}
+function drawUniverseR(x,y,r,o){
+  const im=useImg('cmb',ctx.globalAlpha);
+  if(im){ctx.save();circle(x,y,r);ctx.clip();
+    ctx.globalAlpha*=0.5;ctx.drawImage(im,x-r,y-r,2*r,2*r);ctx.restore();
+    const g=ctx.createRadialGradient(x,y,0,x,y,r);
+    g.addColorStop(0,'rgba(4,5,12,1)');g.addColorStop(0.8,'rgba(4,5,12,0.9)');g.addColorStop(1,'rgba(4,5,12,0)');
+    ctx.fillStyle=g;circle(x,y,r);ctx.fill();}
+  drawUniverse(x,y,r,o);
+}
+/* incertidumbre: rango estimado (anillos punteados) o tamaño muy incierto (halo difuso hacia dentro) */
+function drawUnc(x,y,pr,o){
+  if(pr<12)return;
+  ctx.save();
+  if(o.rr){const r1=pr*o.rr[0]/o.r,r2=pr*o.rr[1]/o.r;
+    ctx.fillStyle='rgba(231,196,107,0.06)';ctx.beginPath();ctx.arc(x,y,r2,0,TAU);ctx.arc(x,y,r1,0,TAU,true);ctx.fill();
+    ctx.setLineDash([4,5]);ctx.strokeStyle='rgba(231,196,107,0.55)';ctx.lineWidth=1;
+    circle(x,y,r1);ctx.stroke();circle(x,y,r2);ctx.stroke();}
+  if(o.unc){ctx.setLineDash([2,6]);ctx.strokeStyle='rgba(231,196,107,0.45)';ctx.lineWidth=1;
+    circle(x,y,pr*0.6);ctx.stroke();circle(x,y,pr);ctx.stroke();}
+  ctx.restore();
+}
+const DRAW={photo:drawPhoto,earth:drawEarth,saturn:drawSaturn,star:drawStarR,ns:drawNS,bhimg:drawBHImg,bh:drawBHRec,
+  ext:drawExt,group:drawGroup,galcluster:drawGalCluster,web:drawWeb,wall:drawWall,universe:drawUniverseR};
+
+/* ============================== zonas de interfaz ============================== */
+let lastHud='';
+function setHud(html,vt){
+  if(html!==lastHud){lastHud=html;$('hud').innerHTML=html;sld.setAttribute('aria-valuetext',vt);}
+}
+let UIR=[];
+function refreshUIR(){
+  UIR=['hud','narr'].map(id=>{const r=$(id).getBoundingClientRect();return{l:r.left,r:r.right,t:r.top,b:r.bottom};});
+}
+function hitsUI(cx,top,bot,hw){
+  for(const r of UIR){if(cx+hw>r.l&&cx-hw<r.r&&bot>r.t&&top<r.b)return true;}
+  return false;
+}
+function outText(t,x,y){ctx.lineJoin='round';ctx.lineWidth=3.5;ctx.strokeStyle='rgba(4,5,12,0.82)';ctx.strokeText(t,x,y);ctx.fillText(t,x,y);}
+/* ============================== modo: tamaños ============================== */
+const R0F=0.13;
+const SERIF='"Palatino Linotype","Book Antiqua",Palatino,Georgia,serif';
+const MONO='ui-monospace,"SF Mono",Consolas,Menlo,monospace';
+function renderSizes(t){
+  const cam=camS.v, DEC=Math.min(370,W*0.36), R0=R0F*minDim;
+  hits=[];const labels=[];
+  for(const o of SIZES_DESC){
+    const g=o.log-cam;
+    if(g>1.0)continue;
+    const pr=R0*Math.pow(10,g);
+    if(pr<0.45)continue;
+    const prD=Math.min(pr,1.6*minDim);
+    const x=W/2+g*DEC+o.xF*minDim+(o.tx||0)*prD, y=H*0.46+o.yF*minDim+(o.ty||0)*prD;
+    const ext=o.kind==='saturn'?2.35:o.kind==='bhimg'||o.kind==='bh'?3:1;
+    if(x+prD*ext<-80||x-prD*ext>W+80)continue;
+    let a=1;
+    if(g>0.55)a=clamp((1.0-g)/0.45,0,1);
+    if(pr<2.2)a*=pr/2.2;
+    if(a<=0.02)continue;
+    ctx.globalAlpha=a;
+    DRAW[o.kind](x,y,prD,o,t);
+    if(o.rr||o.unc)drawUnc(x,y,prD,o);
+    ctx.globalAlpha=1;
+    if(pr>=3&&a>0.5&&x>-20&&x<W+20)hits.push({x,y,r:Math.max(pr*(o.kind==='bhimg'||o.kind==='bh'?2.6:o.kind==='saturn'?1.4:1),18),o});
+    if(pr>=7&&pr<=0.95*minDim&&a>0.55){
+      const above=o.yF<0, ex=o.kind==='bhimg'||o.kind==='bh'?prD*1.7:o.kind==='saturn'?prD*0.25:0;
+      const place=up=>clamp(up?y-prD-30-ex:y+prD+22+ex,64,H-96);
+      ctx.font='600 13px '+SERIF;const w1=ctx.measureText(o.n).width;
+      ctx.font='10.5px '+MONO;const t2=o.med.split('·')[0].trim(),w2=ctx.measureText(t2).width;
+      const hw=Math.max(w1,w2)/2+6;
+      let ly=place(above);
+      if(hitsUI(x,ly-14,ly+20,hw)){ly=place(!above);if(hitsUI(x,ly-14,ly+20,hw))ly=-1;}
+      if(ly>0&&labels.some(L=>Math.abs(L.x-x)<L.hw+hw&&Math.abs(L.ly-ly)<34))ly=-1;
+      if(ly>0)labels.push({x,ly,a,n:o.n,t2,hw});
+    }
+  }
+  ctx.textAlign='center';
+  for(const L of labels){
+    ctx.globalAlpha=L.a;
+    ctx.font='600 13px '+SERIF;ctx.fillStyle='#EDE7D9';
+    outText(L.n,L.x,L.ly);
+    ctx.font='10.5px '+MONO;ctx.fillStyle='rgba(160,196,236,0.95)';
+    outText(L.t2,L.x,L.ly+15);
+  }
+  ctx.globalAlpha=1;
+  const across=Math.pow(10,cam)*(W/(R0F*minDim));
+  setHud(
+    `<span class="he">esta vista abarca</span><b>${fmtLen(across)}</b>`+
+    `<span class="he">la luz la cruza en</span><b>${fmtTime(across/C)}</b>`,
+    'Vista de '+fmtLen(across));
+}
+
+/* ============================== modo: el viaje ============================== */
+const VOY=17000;
+function glyph(x,y,s,ms,t){
+  const kind=ms.kind,col=ms.col;
+  switch(kind){
+    case 'dot':ctx.fillStyle='rgba(231,196,107,0.85)';circle(x,y,s*0.4);ctx.fill();break;
+    case 'img':case 'sun':{
+      if(kind==='sun'){const g=ctx.createRadialGradient(x,y,0,x,y,s*2.4);
+        g.addColorStop(0,'rgba(255,233,176,0.6)');g.addColorStop(1,'rgba(255,233,176,0)');ctx.fillStyle=g;circle(x,y,s*2.4);ctx.fill();}
+      const im=useImg(ms.img,ctx.globalAlpha);
+      if(im){const h=ms.ring?s*1.5:s;ctx.drawImage(im,x-h,y-h,2*h,2*h);}
+      else{const g=ctx.createRadialGradient(x-s*0.3,y-s*0.3,0,x,y,s);
+        g.addColorStop(0,'#CFCBC3');g.addColorStop(1,'#6E6B66');ctx.fillStyle=g;circle(x,y,s);ctx.fill();}
+      break;}
+    case 'star':{const c=col||'#FFD84D';
+      const g=ctx.createRadialGradient(x,y,0,x,y,s*2.4);
+      g.addColorStop(0,rgba(c,0.6));g.addColorStop(1,rgba(c,0));
+      ctx.fillStyle=g;circle(x,y,s*2.4);ctx.fill();
+      const g2=ctx.createRadialGradient(x,y,0,x,y,s);
+      g2.addColorStop(0,'#FFFDF5');g2.addColorStop(1,c);ctx.fillStyle=g2;circle(x,y,s);ctx.fill();break;}
+    case 'ring':ctx.strokeStyle='rgba(147,184,224,0.9)';ctx.lineWidth=1.4;
+      circle(x,y,s);ctx.stroke();circle(x,y,s*0.55);ctx.stroke();break;
+    case 'probe':ctx.save();ctx.translate(x,y);ctx.rotate(Math.PI/4);
+      ctx.fillStyle='#E7C46B';ctx.fillRect(-s*0.5,-s*0.5,s,s);ctx.restore();
+      ctx.strokeStyle='rgba(231,196,107,0.7)';ctx.lineWidth=1;
+      ctx.beginPath();ctx.moveTo(x,y-s*1.4);ctx.lineTo(x,y+s*1.4);ctx.stroke();break;
+    case 'comet':{ctx.fillStyle='rgba(180,205,240,0.8)';
+      for(let i=0;i<8;i++){const a=i/8*TAU+0.4;circle(x+Math.cos(a)*s,y+Math.sin(a)*s*0.7,1.1);ctx.fill();}break;}
+    case 'bh':ctx.strokeStyle='rgba(255,150,70,0.95)';ctx.lineWidth=2;
+      circle(x,y,s*0.85);ctx.stroke();ctx.fillStyle='#000';circle(x,y,s*0.55);ctx.fill();break;
+    case 'galaxy':miniGal(x,y,s*1.5,0.5,0.42,true);break;
+    case 'cluster':{for(let i=0;i<7;i++){const a=i/7*TAU;miniGal(x+Math.cos(a)*s*0.8,y+Math.sin(a)*s*0.6,s*0.4,a,0.5,i%2);}break;}
+    case 'edge':ctx.save();ctx.setLineDash([4,6]);ctx.strokeStyle='rgba(231,196,107,0.8)';ctx.lineWidth=1.5;
+      ctx.beginPath();ctx.moveTo(x,y-s*2.2);ctx.lineTo(x,y+s*2.2);ctx.stroke();ctx.restore();
+      {const g=ctx.createRadialGradient(x,y,0,x,y,s*2.2);g.addColorStop(0,'rgba(255,150,90,0.35)');g.addColorStop(1,'rgba(255,150,90,0)');
+       ctx.fillStyle=g;circle(x,y,s*2.2);ctx.fill();}break;
+  }
+}
+function nextMilestone(d){return TRIP.find(m=>m.d>d*1.0001);}
+function renderTrip(t){
+  const cam=camT.v, DECT=Math.min(300,W*0.34), lineY=(H>W*1.15)?H*0.36:H*0.5;
+  hitsT=[];
+  const d=Math.pow(10,cam);
+  /* la Tierra quedando atrás */
+  const prE=RT/d*W*0.55;
+  if(prE>0.6){const o=SIZES[BYNAME['La Tierra']?SIZES.indexOf(BYNAME['La Tierra']):0];
+    ctx.globalAlpha=clamp(prE/3,0.25,1);
+    drawEarth(W*0.14,lineY,Math.min(prE,H*0.55),o);
+    ctx.globalAlpha=1;
+    if(prE>4&&prE<200){ctx.font='10.5px '+MONO;ctx.fillStyle='rgba(237,231,217,0.6)';
+      ctx.textAlign='center';ctx.fillText('la Tierra, atrás',W*0.14,lineY+Math.min(prE,H*0.55)+18);}}
+  /* ruta */
+  const gr=ctx.createLinearGradient(0,0,W,0);
+  gr.addColorStop(0,'rgba(237,231,217,0)');gr.addColorStop(0.5,'rgba(237,231,217,0.22)');gr.addColorStop(1,'rgba(237,231,217,0)');
+  ctx.strokeStyle=gr;ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(0,lineY);ctx.lineTo(W,lineY);ctx.stroke();
+  for(let L=Math.ceil(cam-W/(2*DECT));L<=cam+W/(2*DECT);L++){
+    const xl=W/2+(L-cam)*DECT;
+    ctx.fillStyle='rgba(237,231,217,0.28)';ctx.fillRect(xl-1,lineY-2,2,4);}
+  /* hitos */
+  ctx.textAlign='center';
+  TRIP.forEach((ms,i)=>{
+    const x=W/2+(ms.log-cam)*DECT;
+    if(x<-100||x>W+100)return;
+    const prox=clamp(1-Math.abs(x-W/2)/(DECT*0.95),0,1);
+    const passed=x<W/2-12;
+    const a=passed?0.4:0.95;
+    const s=9+prox*9;
+    ctx.globalAlpha=a;
+    const side=i%2?1:-1;
+    ctx.strokeStyle='rgba(237,231,217,0.2)';ctx.lineWidth=1;
+    ctx.beginPath();ctx.moveTo(x,lineY+side*14);ctx.lineTo(x,lineY+side*34);ctx.stroke();
+    glyph(x,lineY,s,ms,t);
+    if(prox>0.82&&!reduced){ctx.strokeStyle=`rgba(231,196,107,${0.5+0.3*Math.sin(t*5)})`;
+      ctx.lineWidth=1.2;circle(x,lineY,s+9+Math.sin(t*5)*2.5);ctx.stroke();}
+    ctx.font=(prox>0.6?'600 13.5px ':'600 12px ')+SERIF;const wn=ctx.measureText(ms.n).width;
+    ctx.font='10px '+MONO;const wsb=ctx.measureText(ms.sub).width;
+    const hw=Math.max(wn,wsb)/2, lx=clamp(x,8+hw,W-8-hw), ty=lineY+side*48+(side<0?0:6);
+    const shift=Math.abs(lx-x);
+    ctx.globalAlpha=a*clamp(1-shift/(hw*0.5),0,1);
+    if(hitsUI(lx,ty-14,ty+(side<0?15:21)+4,hw))ctx.globalAlpha*=0.22;
+    ctx.font=(prox>0.6?'600 13.5px ':'600 12px ')+SERIF;
+    ctx.fillStyle=prox>0.6?'#E7C46B':'#EDE7D9';
+    outText(ms.n,lx,ty);
+    ctx.font='10px '+MONO;ctx.fillStyle='rgba(160,196,236,0.95)';
+    outText(ms.sub,lx,lineY+side*48+(side<0?15:21));
+    ctx.globalAlpha=1;
+    hitsT.push({x,y:lineY,r:Math.max(s,16),ms});
+  });
+  /* el viajero */
+  const g=ctx.createRadialGradient(W/2,lineY,0,W/2,lineY,16);
+  g.addColorStop(0,'rgba(231,196,107,0.5)');g.addColorStop(1,'rgba(231,196,107,0)');
+  ctx.fillStyle=g;circle(W/2,lineY,16);ctx.fill();
+  ctx.strokeStyle='#E7C46B';ctx.lineWidth=2;
+  ctx.beginPath();ctx.moveTo(W/2,lineY-11);ctx.lineTo(W/2,lineY+11);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(W/2+3,lineY-5);ctx.lineTo(W/2+9,lineY);ctx.lineTo(W/2+3,lineY+5);ctx.stroke();
+  ctx.font='9.5px '+MONO;ctx.fillStyle='rgba(231,196,107,0.9)';
+  ctx.textAlign='center';ctx.fillText('tú',W/2,lineY+26);
+  /* HUD */
+  let h=`<span class="he">distancia desde la Tierra</span><b>${fmtLen(d)}</b>`+
+        `<span class="he">la luz tardaría</span><b>${fmtTime(d/C)}</b>`;
+  if(lightMode){
+    const nx=nextMilestone(d);
+    h+=`<span class="he">viajando a la velocidad de la luz</span><b>${fmtTime(lsT)}</b>`;
+    if(nx)h+=`<span class="he">${nx.n}, en</span><b>${fmtTime((nx.d-d)/C)}</b>`;
+  }else{
+    const v=Math.LN10*Math.abs(velSm)*d;
+    h+=`<span class="he">la Voyager 1 tardaría</span><b>${fmtTime(d/VOY)}</b>`+
+       `<span class="he">velocidad de la cámara</span><b>${v>1?fmtVel(v):'—'}</b>`;
+    if(v>C)h+=`<span class="he warn">más rápido que la luz: imposible para la materia</span>`;
+  }
+  setHud(h,'A '+fmtLen(d)+' de la Tierra');
+}
+
+/* ============================== narración ============================== */
+let narrKey='',narrTok=0;
+function updNarr(){
+  const bands=mode==='sizes'?NARR_S:NARR_T;
+  const val=mode==='sizes'?camS.v:camT.v;
+  const b=bands.find(b=>val>=b.a&&val<b.b)||bands[bands.length-1];
+  const key=mode+'|'+b.e;
+  if(key===narrKey)return;
+  narrKey=key;const tok=++narrTok;
+  const el=$('narr');el.style.opacity='0';
+  setTimeout(()=>{if(tok!==narrTok)return;
+    $('narrE').textContent='◦ '+b.e;
+    $('narrT').textContent=b.t;
+    el.style.opacity='1';},reduced?0:360);
+}
+
+/* ============================== lazo principal ============================== */
+let last=performance.now(), uirTick=0, lastCred='';
+function frame(now){
+  const dt=Math.min(0.05,(now-last)/1000);last=now;
+  const t=now/1000;
+  /* avance del viaje */
+  if(mode==='trip'&&playing){
+    if(lightMode){
+      /* tiempo real: la distancia crece exactamente a c */
+      const d=Math.pow(10,camT.t)+C*dt;lsT+=dt;
+      camT.t=Math.min(Math.log10(d),LMAX_T);camT.v=camT.t;
+    }else camT.t=clamp(camT.t+spd*dt,LMIN_T,LMAX_T);
+    if(camT.t>=LMAX_T){playing=false;updPlay();}
+  }
+  camS.v=lerp(camS.v,camS.t,1-Math.pow(0.002,dt));
+  camT.v=lerp(camT.v,camT.t,1-Math.pow(0.002,dt));
+  const shown=mode==='sizes'?camS.v:camT.v;
+  velSm=lerp(velSm,(shown-prevShown)/Math.max(dt,1e-4),0.08);
+  prevShown=shown;
+  /* fondo */
+  ctx.fillStyle='#04050C';ctx.fillRect(0,0,W,H);
+  drawStars(t,-shown,shown);
+  if(uirTick++%12===0)refreshUIR();
+  CRED.clear();
+  if(mode==='sizes')renderSizes(t);else renderTrip(t);
+  ctx.fillStyle=vg;ctx.fillRect(0,0,W,H);
+  /* créditos de las fotos a la vista */
+  const cs=[...CRED].join(' · ');
+  if(cs!==lastCred){lastCred=cs;$('cred').textContent=cs?'Imágenes: '+cs:'';}
+  /* narración: se mueve con el espacio */
+  if(!reduced)$('narr').style.transform=`translateY(${clamp(-velSm*26,-16,16)}px)`;
+  updNarr();
+  /* sincronizar deslizador */
+  if(!sldHold){
+    const a=mode==='sizes'?LMIN_S:LMIN_T, b=mode==='sizes'?LMAX_S:LMAX_T;
+    const tv=mode==='sizes'?camS.t:camT.t;
+    sld.value=Math.round((tv-a)/(b-a)*10000);
+  }
+  requestAnimationFrame(frame);
+}
+
+/* ============================== interfaz ============================== */
+const sld=$('sld');let sldHold=false;
+function buildTicks(){
+  const tk=mode==='sizes'?TICKS_S:TICKS_T;
+  const a=mode==='sizes'?LMIN_S:LMIN_T, b=mode==='sizes'?LMAX_S:LMAX_T;
+  $('ticks').innerHTML=tk.map(x=>
+    `<span class="tick${x.big?' big':''}" style="left:${((x.l-a)/(b-a)*100).toFixed(2)}%"><i></i><span>${x.t}</span></span>`).join('');
+}
+function setTarget(v){
+  if(mode==='sizes')camS.t=clamp(v,LMIN_S,LMAX_S);
+  else{camT.t=clamp(v,LMIN_T,LMAX_T);if(lightMode)camT.v=camT.t;}
+}
+function getTarget(){return mode==='sizes'?camS.t:camT.t;}
+sld.addEventListener('input',()=>{
+  const a=mode==='sizes'?LMIN_S:LMIN_T, b=mode==='sizes'?LMAX_S:LMAX_T;
+  setTarget(a+(sld.value/10000)*(b-a));
+});
+sld.addEventListener('keydown',e=>{
+  const k=e.key;
+  if(k==='ArrowRight'||k==='ArrowUp')setTarget(getTarget()+0.25);
+  else if(k==='ArrowLeft'||k==='ArrowDown')setTarget(getTarget()-0.25);
+  else if(k==='PageUp')setTarget(getTarget()+1);
+  else if(k==='PageDown')setTarget(getTarget()-1);
+  else if(k==='Home')setTarget(-99);
+  else if(k==='End')setTarget(99);
+  else return;
+  e.preventDefault();e.stopPropagation();
+});
+sld.addEventListener('pointerdown',()=>sldHold=true);
+window.addEventListener('pointerup',()=>sldHold=false);
+
+function setMode(m){
+  mode=m;
+  $('tabS').classList.toggle('active',m==='sizes');
+  $('tabT').classList.toggle('active',m==='trip');
+  $('tabS').setAttribute('aria-pressed',m==='sizes');
+  $('tabT').setAttribute('aria-pressed',m==='trip');
+  document.body.classList.toggle('trip',m==='trip');
+  $('tripCtl').hidden=m!=='trip';
+  buildTicks();closeCard();
+  narrKey='';lastHud='';uirTick=0;
+}
+$('tabS').addEventListener('click',()=>{playing=false;updPlay();setMode('sizes');});
+$('tabT').addEventListener('click',()=>setMode('trip'));
+
+function updPlay(){$('btnPlay').textContent=playing?'❚❚':'▶';}
+$('btnPlay').addEventListener('click',()=>{
+  if(camT.t>=LMAX_T-0.01&&!playing){camT.t=LMIN_T;camT.v=LMIN_T;lsT=0;}
+  playing=!playing;updPlay();});
+$('selSpd').addEventListener('change',e=>{
+  lightMode=e.target.value==='c';lsT=0;
+  if(!lightMode)spd=parseFloat(e.target.value);
+  lastHud='';
+});
+$('btnHelp').addEventListener('click',()=>$('help').hidden=!$('help').hidden);
+
+/* ficha */
+function setFig(k){
+  const f=$('cFig');
+  if(!k||!IMG[k]){f.hidden=true;return;}
+  const m=IMG[k];
+  $('cImg').src='img/'+k+'.webp';$('cImg').alt=m.cap;
+  $('cCap').innerHTML=`<span>${TIPO_IMG[m.t]}</span> ${m.cap} <a href="${COM+m.u}" target="_blank" rel="noopener">${m.cr}</a> · ${m.lic}`;
+  f.hidden=false;
+}
+const VIS={foto:'📷 en pantalla: fotografía real',rec:'✏️ en pantalla: reconstrucción con datos reales',ilus:'✏️ en pantalla: ilustración científica'};
+function fillCard(c){
+  $('cTipo').textContent=c.tipo;$('cNombre').textContent=c.n;$('cMedida').textContent=c.med||'';
+  $('cBadge').textContent=c.vis?VIS[c.vis]:'';$('cBadge').hidden=!c.vis;
+  $('cDatos').innerHTML=(c.datos||[]).map(([k,v])=>`<dt>${k}</dt><dd>${v}</dd>`).join('');
+  $('cTxt').textContent=c.txt||'';
+  $('cDato').textContent=c.dato||'';$('cDato').hidden=!c.dato;
+  $('cVel').hidden=!c.vel;
+  setFig(c.fig);
+  $('src').hidden=true;$('card').hidden=false;$('card').scrollTop=0;
+}
+function openSize(o){fillCard({tipo:o.tipo,n:o.n,med:o.med,vis:o.vis,datos:o.datos,txt:o.txt,dato:o.dato,vel:o.vel,fig:o.card||o.img});}
+function openTrip(ms){
+  const r=ms.ref?BYNAME[ms.ref]:null;
+  fillCard({tipo:'Hito del viaje'+(r?' · '+r.tipo:''),n:ms.n,
+    med:`Desde la Tierra: ${fmtLen(ms.d)} · luz: ${fmtTime(ms.d/C)} · Voyager 1: ${fmtTime(ms.d/VOY)}`,
+    vis:null,datos:ms.datos||(r&&r.datos),txt:ms.txt||(r&&r.txt),dato:r&&!ms.txt?r.dato:'',vel:r&&r.vel,
+    fig:ms.foto||(r&&(r.card||r.img))});
+}
+function openVel(){
+  const tot=VEL.map(v=>[`${v.k} ${v.l}`,`<b>${nf(v.v)} km/h</b> — ${v.n}`]);
+  tot.push(['🚀 Tu velocidad respecto al fondo de microondas','<b>≈ 1,330,000 km/h</b> — unos 370 km cada segundo']);
+  fillCard({tipo:'Nunca estás quieto',n:'Tu velocidad real',med:'Crees estar en reposo. En realidad haces todo esto a la vez, ahora mismo.',
+    datos:tot,
+    txt:'Respecto al fondo de microondas —lo más parecido a un «reposo» cósmico— la Vía Láctea se mueve a unos 600 km/s. Pero tú no vas a 600: vas a unos 370 km/s. ¿Por qué menos? Porque la órbita del Sol alrededor de la galaxia apunta en buena parte en contra de esa caída, y las velocidades se suman como flechas, no como números. Y no sientes nada, porque todo a tu alrededor viaja contigo.',
+    dato:'La quietud es la gran ilusión. Vas montado en un caballo desbocado a través del cosmos y lo llamas «estar sentado». Tal vez la paz no sea ausencia de movimiento, sino dejar de pelear contra el que ya te lleva.',
+    fig:'paleblue'});
+}
+function closeCard(){$('card').hidden=true;$('src').hidden=true;}
+$('cardX').addEventListener('click',closeCard);
+$('cVel').addEventListener('click',openVel);
+$('btnVel').addEventListener('click',()=>{$('help').hidden=true;openVel();});
+$('btnSrc').addEventListener('click',()=>{$('card').hidden=true;$('src').hidden=false;$('help').hidden=true;});
+$('srcX').addEventListener('click',closeCard);
+/* créditos completos en el panel de fuentes */
+{const nombres={moon:'La Luna',mercury:'Mercurio',venus:'Venus',earth:'La Tierra',mars:'Marte',jupiter:'Júpiter',saturn:'Saturno',
+  uranus:'Urano',neptune:'Neptuno',pluto:'Plutón',sun:'El Sol',m87:'M87*',sgra:'Sagitario A*',orion:'Nebulosa de Orión',
+  omegacen:'Omega Centauri',milkyway:'La Vía Láctea',andromeda:'Andrómeda',ic1101:'IC 1101',cmb:'Fondo de microondas',
+  betelgeuse:'Betelgeuse',antares:'Antares',siriusb:'Sirio A y B',vycma:'VY Canis Majoris',paleblue:'Un punto azul pálido',
+  voyager:'Voyager',iss:'Estación Espacial',atmosfera:'Línea de Kármán',lmc:'Gran Nube de Magallanes',deepfield:'Campo profundo del Webb',momz14:'MoM-z14'};
+ $('srcImg').innerHTML=Object.entries(IMG).map(([k,m])=>
+  `<li><b>${nombres[k]||k}</b>${TIPO_IMG[m.t]} · <a href="${COM+m.u}" target="_blank" rel="noopener">${m.cr}</a> · ${m.lic}</li>`).join('');}
+
+/* punteros: arrastre, pellizco, clic */
+const ptrs=new Map();let moved=false,pinchD=0;
+cv.addEventListener('pointerdown',e=>{
+  ptrs.set(e.pointerId,{x:e.clientX,y:e.clientY});moved=false;
+  if(ptrs.size===2){const[p,q]=[...ptrs.values()];pinchD=Math.hypot(p.x-q.x,p.y-q.y);}
+  cv.classList.add('drag');cv.setPointerCapture(e.pointerId);
+});
+cv.addEventListener('pointermove',e=>{
+  if(!ptrs.has(e.pointerId))return;
+  const prev=ptrs.get(e.pointerId);
+  ptrs.set(e.pointerId,{x:e.clientX,y:e.clientY});
+  if(ptrs.size===1){
+    const dx=e.clientX-prev.x;
+    if(Math.abs(dx)>2)moved=true;
+    const DEC=mode==='sizes'?Math.min(370,W*0.36):Math.min(300,W*0.34);
+    setTarget(getTarget()-dx/DEC);
+  }else if(ptrs.size===2){
+    moved=true;
+    const[p,q]=[...ptrs.values()];
+    const nd=Math.hypot(p.x-q.x,p.y-q.y);
+    if(pinchD>0)setTarget(getTarget()-Math.log10(nd/pinchD)*1.4);
+    pinchD=nd;
+  }
+});
+function ptrUp(e){
+  if(ptrs.has(e.pointerId)&&ptrs.size===1&&!moved){
+    const mx=e.clientX,my=e.clientY;
+    if(mode==='sizes'){
+      let best=null,bd=1e9;
+      for(const h of hits){const d2=(h.x-mx)**2+(h.y-my)**2;
+        if(d2<Math.max(h.r,20)**2&&h.r<bd){bd=h.r;best=h;}}
+      if(best){openSize(best.o);camS.t=clamp(best.o.log,LMIN_S,LMAX_S);}
+      else closeCard();
+    }else{
+      let best=null,bd=1e9;
+      for(const h of hitsT){const d2=(h.x-mx)**2+(h.y-my)**2;
+        if(d2<(h.r+14)**2&&d2<bd){bd=d2;best=h;}}
+      if(best){playing=false;updPlay();camT.t=best.ms.log;openTrip(best.ms);}
+      else closeCard();
+    }
+  }
+  ptrs.delete(e.pointerId);
+  if(ptrs.size<2)pinchD=0;
+  if(ptrs.size===0)cv.classList.remove('drag');
+}
+cv.addEventListener('pointerup',ptrUp);
+cv.addEventListener('pointercancel',e=>{ptrs.delete(e.pointerId);pinchD=0;cv.classList.remove('drag');});
+
+window.addEventListener('wheel',e=>{
+  if(e.target instanceof Element && e.target.closest('.card,.controls,.help'))return;
+  e.preventDefault();
+  setTarget(getTarget()+e.deltaY*0.0016);
+},{passive:false});
+
+window.addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight')setTarget(getTarget()+0.25);
+  else if(e.key==='ArrowLeft')setTarget(getTarget()-0.25);
+  else if(e.key===' '&&mode==='trip'){e.preventDefault();playing=!playing;updPlay();}
+  else if(e.key==='Escape'){closeCard();$('help').hidden=true;}
+});
+
+/* intro */
+function dismissIntro(m,play){
+  $('intro').remove();
+  setMode(m);
+  if(m==='trip'){camT.t=LMIN_T;camT.v=LMIN_T;lsT=0;playing=play&&!reduced;updPlay();}
+}
+$('goS').addEventListener('click',()=>dismissIntro('sizes',false));
+$('goT').addEventListener('click',()=>dismissIntro('trip',true));
+
+buildTicks();
+updNarr();
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>
