@@ -1,8 +1,8 @@
-# La Inmensidad
+# La Inmensidad del Universo
 
 **[Español](#español) · [English](#english)**
 
-![La Inmensidad](docs/og.png)
+![La Inmensidad del Universo](docs/og.png)
 
 ---
 
@@ -10,7 +10,7 @@
 
 > *Dos maneras de perderse: comparar los tamaños de los astros, o viajar por las distancias que los separan.*
 
-**La Inmensidad** es un atlas interactivo de escalas cósmicas: de una estrella de neutrones de 24 km al universo observable, de la línea de Kármán al fondo de microondas. Un solo archivo HTML con JavaScript a mano, sin dependencias ni servidor.
+**La Inmensidad del Universo** es un atlas interactivo de escalas cósmicas: de una estrella de neutrones de 24 km al universo observable, de la línea de Kármán al fondo de microondas. Un solo archivo HTML con JavaScript a mano, sin dependencias ni servidor.
 
 ### ▶ Abrir
 
@@ -38,7 +38,7 @@ El código está bajo licencia MIT. **Las imágenes no**: cada una conserva su l
 
 > *Two ways to get lost: compare the sizes of celestial objects, or travel the distances between them.*
 
-**La Inmensidad** ("The Immensity") is an interactive atlas of cosmic scales, in Spanish: from a 24 km neutron star to the observable universe, from the Kármán line to the cosmic microwave background. A single hand-written HTML file, no dependencies, no server.
+**La Inmensidad del Universo** ("The Immensity of the Universe") is an interactive atlas of cosmic scales, in Spanish: from a 24 km neutron star to the observable universe, from the Kármán line to the cosmic microwave background. A single hand-written HTML file, no dependencies, no server.
 
 **Open:** `https://alex-vazquez73.github.io/la-inmensidad/`
 

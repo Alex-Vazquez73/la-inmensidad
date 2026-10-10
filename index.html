@@ -7,7 +7,7 @@
 <meta name="theme-color" content="#04050C">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="es_MX">
-<meta property="og:title" content="La Inmensidad — atlas del vértigo cósmico">
+<meta property="og:title" content="La Inmensidad del Universo — atlas del vértigo cósmico">
 <meta property="og:description" content="Compara el tamaño de los astros o viaja por las distancias que los separan. Desliza, observa — y deja que el universo te desborde.">
 <meta property="og:url" content="https://alex-vazquez73.github.io/la-inmensidad/">
 <meta property="og:image" content="https://alex-vazquez73.github.io/la-inmensidad/docs/og.png">
@@ -15,7 +15,7 @@
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='15' fill='%2304050C'/%3E%3Ccircle cx='16' cy='16' r='11' fill='none' stroke='%23E7C46B' stroke-width='1.5' stroke-dasharray='3 3'/%3E%3Ccircle cx='16' cy='16' r='3.2' fill='%23E7C46B'/%3E%3C/svg%3E">
-<title>La Inmensidad — atlas del vértigo cósmico</title>
+<title>La Inmensidad del Universo — atlas del vértigo cósmico</title>
 <style>
   *{margin:0;padding:0;box-sizing:border-box}
   :root{
@@ -104,6 +104,7 @@
   .icard{max-width:580px;text-align:center}
   .icard .ie{font-family:var(--mono);font-size:10.5px;letter-spacing:.32em;text-transform:uppercase;color:var(--gold);margin-bottom:14px}
   .icard h2{font-family:var(--serif);font-weight:600;font-size:clamp(34px,7vw,56px);letter-spacing:.1em;text-transform:uppercase;margin-bottom:16px}
+  .icard h2 span{display:block;font-size:.5em;letter-spacing:.22em;margin-top:6px;color:var(--gold)}
   .icard .is{font-family:var(--serif);font-size:clamp(15px,2.2vw,18px);line-height:1.6;color:var(--ink);margin-bottom:26px}
   .icard .is em{color:var(--gold);font-style:italic}
   .ibtns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:22px}
@@ -114,7 +115,8 @@
 
   @media (max-width:640px){
     .top{gap:8px;padding-top:calc(12px + env(safe-area-inset-top,0px));padding-bottom:12px}
-    .brand h1{font-size:14px;letter-spacing:.12em}
+    .brand h1{font-size:14px;letter-spacing:.12em;line-height:1.25}
+    .brand h1 span{display:block;font-size:10.5px;letter-spacing:.18em;color:var(--gold)}
     .brand p{display:none}
     .tabs{gap:6px}
     .tab{padding:7px 11px;font-size:10.5px;letter-spacing:.06em}
@@ -148,7 +150,7 @@
 
 <header class="top">
   <div class="brand">
-    <h1>La Inmensidad</h1>
+    <h1>La Inmensidad <span>del Universo</span></h1>
     <p>un atlas del vértigo cósmico</p>
   </div>
   <nav class="tabs">
@@ -233,7 +235,7 @@
 <div class="intro" id="intro">
   <div class="icard">
     <p class="ie">Archivo · Alejandro Vázquez</p>
-    <h2>La Inmensidad</h2>
+    <h2>La Inmensidad <span>del Universo</span></h2>
     <p class="is">Dos maneras de perderse: comparar los <em>tamaños</em> de los astros, o viajar por las <em>distancias</em> que los separan.<br>Desliza, observa — y deja que el universo te desborde.</p>
     <div class="ibtns">
       <button class="bigbtn" id="goS">Explorar tamaños</button>
