@@ -1271,8 +1271,10 @@ function renderTrip(t){
   ctx.font='9.5px '+MONO;ctx.fillStyle='rgba(231,196,107,0.9)';
   ctx.textAlign='center';ctx.fillText('tú',W/2,lineY+26);
   /* HUD */
-  let h=`<span class="he">distancia desde la Tierra</span><b>${fmtLen(d)}</b>`+
-        `<span class="he">la luz tardaría</span><b>${fmtTime(d/C)}</b>`;
+  let h=lightMode
+    ? `<span class="he">distancia desde la Tierra</span><b>${nf(d/1000)} km</b>`+(d>7.5e9?`<span class="he">${fmtLen(d)}</span>`:'')
+    : `<span class="he">distancia desde la Tierra</span><b>${fmtLen(d)}</b>`+
+      `<span class="he">la luz tardaría</span><b>${fmtTime(d/C)}</b>`;
   if(lightMode){
     const nx=nextMilestone(d);
     h+=`<span class="he">viajando a la velocidad de la luz</span><b>${fmtTime(lsT)}</b>`;
@@ -1289,6 +1291,7 @@ function renderTrip(t){
 /* ============================== narración ============================== */
 let narrKey='',narrTok=0;
 function updNarr(){
+  if(mode==='trip'&&lightMode&&lsT<14)return; /* deja leer el aviso de la luz */
   const bands=mode==='sizes'?NARR_S:NARR_T;
   const val=mode==='sizes'?camS.v:camT.v;
   const b=bands.find(b=>val>=b.a&&val<b.b)||bands[bands.length-1];
@@ -1395,6 +1398,14 @@ $('btnPlay').addEventListener('click',()=>{
 $('selSpd').addEventListener('change',e=>{
   lightMode=e.target.value==='c';lsT=0;
   if(!lightMode)spd=parseFloat(e.target.value);
+  else{
+    /* a la velocidad de la luz, el viaje solo tiene sentido desde casa */
+    closeCard();camT.t=camT.v=LMIN_T;playing=true;updPlay();
+    const b=NARR_T[0];narrKey='trip|'+b.e;narrTok++;
+    $('narrE').textContent='◦ a la velocidad de la luz';
+    $('narrT').textContent='Ahora viajas a 299,792 km por segundo, de verdad. La Luna llegará en 1.3 segundos; el Sol, en 8 minutos y 20; Próxima Centauri, en 4.24 años. Mira correr los kilómetros: es lo más rápido que existe, y aun así el cosmos lo vuelve casi inmóvil.';
+    $('narr').style.opacity='1';
+  }
   lastHud='';
 });
 $('btnHelp').addEventListener('click',()=>$('help').hidden=!$('help').hidden);
